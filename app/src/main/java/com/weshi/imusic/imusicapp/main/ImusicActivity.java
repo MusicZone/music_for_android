@@ -1,6 +1,5 @@
 package com.weshi.imusic.imusicapp.main;
 
-import android.support.v7.app.ActionBarActivity;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -18,11 +17,26 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.os.Handler;
+import android.os.Message;
+import java.util.HashMap;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+
+import com.weshi.imusic.imusicapp.tools.FileUtils;
+import com.weshi.imusic.imusicapp.tools.HttpDownloadUtil;
 import com.weshi.imusic.imusicapp.update.UpdateManager;
+import com.weshi.imusic.imusicapp.tools.JsonUtil;
 
 import com.weshi.imusic.imusicapp.R;
 
-public class ImusicActivity extends ListActivity {
+public class ImusicActivity extends ListActivity implements HttpDownloadUtil.CallBack {
 
 
     private ImusicService mMusicPlayerService = null;
@@ -32,6 +46,26 @@ public class ImusicActivity extends ListActivity {
     private TextView mTextView = null;
     private Button mPlayPauseButton = null;
     private Button mStopButton = null;
+
+    private HashMap<String, String>[] playHeads;
+    private HashMap<String, String>[] playAlbums;
+
+    private int SongID = 0;
+    private boolean headPlay=false;
+
+
+
+    private static final int QUERY_ABSTRACT_SUCCESS = 1;
+    private static final int QUERY_ABSTRACT_FAILURE = 2;
+    private static final int QUERY_ALBUMS_SUCCESS = 3;
+    private static final int QUERY_ALBUMS_FAILURE = 4;
+
+    private JsonUtil jsonparser=new JsonUtil();
+
+
+
+
+
     private ServiceConnection mPlaybackConnection = new ServiceConnection()
     {
         public void onServiceConnected(ComponentName className, IBinder service)
@@ -57,6 +91,36 @@ public class ImusicActivity extends ListActivity {
                 mPlayPauseButton.setText(R.string.pause);
             } else if(action.equals(ImusicService.PLAY_COMPLETED)) {
                 mPlayPauseButton.setText(R.string.play);
+                if(headPlay){
+                    headPlay = false;
+
+                    HashMap<String, String> det = playAlbums[SongID];
+                    String aurl = FileUtils.getFilePath("imusic/",det.get("name"));
+                    mMusicPlayerService.setDataSource(aurl);
+                    mMusicPlayerService.start();
+                }else{
+                    if(playHeads.length>SongID){
+                        HashMap<String, String> det = playHeads[SongID++];
+                        String aurl = det.get("url");
+
+                        headPlay=true;
+                        mMusicPlayerService.setDataSource(aurl);
+                        mMusicPlayerService.start();
+
+                    }else{
+                        SongID++;
+
+                        headPlay = false;
+
+                        if(playAlbums.length>=SongID) SongID=0;
+
+                        HashMap<String, String> det = playAlbums[SongID];
+                        String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
+                        mMusicPlayerService.setDataSource(aurl);
+                        mMusicPlayerService.start();
+                    }
+
+                }
             }
         }
     };
@@ -66,16 +130,22 @@ public class ImusicActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imusic);
 
+
         UpdateManager manager = new UpdateManager(this);
         // 检查软件更新
         manager.checkUpdate();
 
+
+        Thread mAbstractThread=new Thread(AbstractInfo);
+        mAbstractThread.start();
+
+
+
+
+
+
         mMusicInfoController = MusicInfoController.getInstance(this);
 
-        //MusicPlayerApp musicPlayerApp=(MusicPlayerApp)getApplication();
-        //mMusicInfoController = (musicPlayerApp).getMusicInfoController();
-
-        // bind playback service
         startService(new Intent(this,ImusicService.class));
         bindService(new Intent(this,ImusicService.class), mPlaybackConnection, Context.BIND_AUTO_CREATE);
 
@@ -143,13 +213,103 @@ public class ImusicActivity extends ListActivity {
 
 
 
+    public void notifyResult(boolean re)
+    {
+        if(re){
+
+            HashMap<String, String> det = playAlbums[SongID];
+            String url = det.get("url");
+
+            mMusicPlayerService.setDataSource(url);
+            mMusicPlayerService.start();
+
+        }
+    }
 
 
 
 
 
 
+    Runnable AbstractInfo=new Runnable(){
+        @Override
+        public void run() {
+            try {
+                String url=getText(R.string.Server_Url)+"m=Abstract&a=get";
+                HttpGet httpRequest = new HttpGet(url);
+                String strResult = "";
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpClient.execute(httpRequest);
 
+                if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    strResult = EntityUtils.toString(httpResponse.getEntity());
+                }
+                playHeads = jsonparser.parserAbstract(strResult);
+                mHandler.obtainMessage(QUERY_ABSTRACT_SUCCESS).sendToTarget();
+            } catch (Exception e) {
+                mHandler.obtainMessage(QUERY_ABSTRACT_FAILURE).sendToTarget();
+                return;
+            }
+        }
+    };
+
+    Runnable AlbumsInfo=new Runnable(){
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            try {
+                String url=getText(R.string.Server_Url)+"m=Albums&a=get";
+                HttpGet httpRequest = new HttpGet(url);
+                String strResult = "";
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpResponse httpResponse = httpClient.execute(httpRequest);
+
+                if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    strResult = EntityUtils.toString(httpResponse.getEntity());
+                }
+
+                playAlbums = jsonparser.parserAlbums(strResult);
+                mHandler.obtainMessage(QUERY_ALBUMS_SUCCESS).sendToTarget();
+            } catch (Exception e) {
+                mHandler.obtainMessage(QUERY_ALBUMS_FAILURE).sendToTarget();
+                return;
+            }
+        }
+    };
+
+
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case QUERY_ABSTRACT_SUCCESS:
+
+                    if(playHeads.length>0){
+                        HashMap<String, String> det = playHeads[SongID];
+                        String url = det.get("url");
+
+                        headPlay=true;
+
+
+                        mMusicPlayerService.setDataSource(url);
+                        mMusicPlayerService.start();
+                    }
+                    Thread mAlbumsThread=new Thread(AlbumsInfo);
+                    mAlbumsThread.start();
+
+                    break;
+                case QUERY_ALBUMS_SUCCESS:
+
+                    HttpDownloadUtil downloadMusic = new HttpDownloadUtil(playAlbums,ImusicActivity.this);
+                    downloadMusic.execute();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+    };
 
 
 }

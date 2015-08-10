@@ -12,7 +12,7 @@
     <string name="soft_update_later">Later</string>
     <string name="soft_updating">Updating...</string>
     <string name="soft_update_cancel">Cancel</string>
-    <string name="Server_Url">https://imusic-androidtv.rhcloud.com/imusic/?</string>
+    <string name="Server_Url">http://bbs.imusic.ren/imusic/?</string>
 
 
 

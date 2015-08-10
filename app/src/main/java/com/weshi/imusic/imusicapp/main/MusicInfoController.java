@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.os.Environment;
 
 public class MusicInfoController {
     private static MusicInfoController mInstance = null;
@@ -37,7 +38,10 @@ public class MusicInfoController {
     }
 
     public Cursor getAllSongs() {
-        return query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        // we only find the music under the folder of imusic which is located in the sdcard.
+        String sdpath = Environment.getExternalStorageDirectory() + "/";
+        String musicPath = sdpath + "imusic%";
+        return query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Audio.Media.DATA + " like ? ", new String[]{musicPath} , MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
     }
 }
 
