@@ -42,7 +42,10 @@ public class FileUtils {
      */
     public File createSDDir(String dirName){
         File file=new File(SDPath+dirName);
-        file.mkdir();
+        // 判断文件目录是否存在
+        if (!file.exists()) {
+            file.mkdir();
+        }
         return file;
     }
 
@@ -51,8 +54,9 @@ public class FileUtils {
      * @param fileName
      * @return
      */
-    public boolean isFileExist(String fileName){
-        File file=new File(SDPath+fileName);
+    public static boolean isFileExist(String path,String fileName){
+        File file=new File(SDPath+path+fileName);
+        //file.delete();
         return file.exists();
     }
 
@@ -69,10 +73,19 @@ public class FileUtils {
         OutputStream outStream=null;
         try {
             outStream=new FileOutputStream(file);
-            byte[] buffer=new byte[4*1024];
+            byte[] buffer=new byte[1024];
+            int numread=0;
+            do{
+                numread = inputStream.read(buffer);
+                if(numread != -1)
+                    outStream.write(buffer,0,numread);
+                else break;
+            }while(true);
+            /*
             while(inputStream.read(buffer)!=-1){
                 outStream.write(buffer);
-            }
+            }*/
+
             outStream.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -81,11 +94,14 @@ public class FileUtils {
         }finally{
             try {
                 outStream.close();
+                inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return file;
+
+
     }
 
 

@@ -30,6 +30,19 @@ public class ImusicService extends Service {
     };
 
 
+    MediaPlayer.OnErrorListener mErrorListener = new MediaPlayer.OnErrorListener()
+    {
+        @Override
+          /*覆盖错误处理事件*/
+        public boolean onError(MediaPlayer arg0, int arg1, int arg2)
+        {
+            // TODO Auto-generated method stub
+
+            return false;
+        }
+    };
+
+
     private void broadcastEvent(String what) {
         Intent i = new Intent(what);
         sendBroadcast(i);
@@ -42,6 +55,7 @@ public class ImusicService extends Service {
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(mPrepareListener);
         mMediaPlayer.setOnCompletionListener(mCompleteListener);
+        mMediaPlayer.setOnErrorListener(mErrorListener);
     }
 
     public class LocalBinder extends Binder {

@@ -207,6 +207,7 @@ public class UpdateManager {
                 dialog.dismiss();
                 // 设置取消状态
                 cancelUpdate = true;
+                System.exit(0);
             }
         });
         mDownloadDialog = builder.create();
@@ -270,6 +271,7 @@ public class UpdateManager {
                         // 写入文件
                         fos.write(buf, 0, numread);
                     } while (!cancelUpdate);// 点击取消就停止下载.
+                    fos.flush();
                     fos.close();
                     is.close();
                 }

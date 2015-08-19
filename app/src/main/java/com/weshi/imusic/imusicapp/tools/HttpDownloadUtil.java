@@ -1,5 +1,6 @@
 package com.weshi.imusic.imusicapp.tools;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -25,25 +26,32 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 /**
  * Created by apple28 on 15-8-3.
  */
-public class HttpDownloadUtil extends AsyncTask<String,String,String>  {
+public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 
     private HashMap<String, String>[] files;
     private CallBack mCallBack;
+    private ProgressDialog mProgressDialog;
+
+    final String TAG="HttpDownloadUtil";
+
+
 
     public interface CallBack {
         void notifyResult(boolean re);
     }
 
-    public HttpDownloadUtil(HashMap<String, String>[] fls,CallBack callback)
+    public HttpDownloadUtil(HashMap<String, String>[] fls,CallBack callback,ProgressDialog bar)
     {
         this.files = fls;
         this.mCallBack = callback;
+        this.mProgressDialog = bar;
     }
 
     @Override
@@ -56,21 +64,31 @@ public class HttpDownloadUtil extends AsyncTask<String,String,String>  {
     @Override
     protected String doInBackground(String... aurl) {
 
+        int current = 0;
+        int step=100/this.files.length;
         for (HashMap<String, String> file : this.files)
-            downFile(file.get("name"), "imusic/", file.get("url"),Long.parseLong(file.get("size")));
+        {
+
+            publishProgress(current);
+            downFile(file.get("url"), "imusic/", file.get("name"), Long.valueOf(file.get("size")).longValue());
+            current+=step;
+            Log.d(TAG,file.get("name"));
+        }
 
         return null;
     }
 
-    protected void onProgressUpdate(String... progress) {
+    protected void onProgressUpdate(Integer... progress) {
         //Log.d(LOG_TAG,progress[0]);
         //mProgressDialog.setProgress(Integer.parseInt(progress[0]));
+        mProgressDialog.setProgress(progress[0]);
     }
 
     @Override
     protected void onPostExecute(String unused) {
         super.onPostExecute(unused);
 
+        mProgressDialog.dismiss();
         if(mCallBack != null)
             this.mCallBack.notifyResult(true);
         //dismiss the dialog after the file was downloaded
@@ -88,7 +106,10 @@ public class HttpDownloadUtil extends AsyncTask<String,String,String>  {
         InputStream inputStream=null;
         FileUtils fileUtils=new FileUtils();
 
-        if(fileUtils.isFileExist(path+fileName)){
+        fileUtils.createSDDir(path);
+
+
+        if (FileUtils.isFileExist(path,fileName)){
             return 1;
         }else{
             if(FileUtils.getSpace()<filesize) return -1;
