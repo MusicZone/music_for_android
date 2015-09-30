@@ -115,7 +115,9 @@ public class LocalActivity extends ListActivity {
         super.onResume();
         mCursor = mMusicInfoController.getAllSongs();
 
-        ListAdapter adapter = new MusicListAdapter(this, android.R.layout.simple_expandable_list_item_2, mCursor, new String[]{}, new int[]{});
+        //ListAdapter adapter = new MusicListAdapter(this, android.R.layout.simple_expandable_list_item_2, mCursor, new String[]{}, new int[]{});
+        ListAdapter adapter = new MusicListAdapter(this, R.layout.list_item, mCursor, new String[]{}, new int[]{});
+
         setListAdapter(adapter);
     }
 

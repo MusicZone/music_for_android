@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import com.weshi.imusic.imusicapp.R;
 
 /**
  * Created by apple28 on 15/8/15.
@@ -22,8 +23,8 @@ class MusicListAdapter extends SimpleCursorAdapter {
 
         super.bindView(view, context, cursor);
 
-        TextView titleView = (TextView) view.findViewById(android.R.id.text1);
-        TextView artistView = (TextView) view.findViewById(android.R.id.text2);
+        TextView titleView = (TextView) view.findViewById(R.id.text1);
+        TextView artistView = (TextView) view.findViewById(R.id.text2);
 
         titleView.setText(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
 

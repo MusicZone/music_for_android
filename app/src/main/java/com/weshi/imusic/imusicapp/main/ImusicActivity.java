@@ -1,5 +1,6 @@
 package com.weshi.imusic.imusicapp.main;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -39,7 +40,7 @@ import com.weshi.imusic.imusicapp.tools.JsonUtil;
 
 import com.weshi.imusic.imusicapp.R;
 
-public class ImusicActivity extends ListActivity implements HttpDownloadUtil.CallBack {
+public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBack {
 
 
     private ImusicService mMusicPlayerService = null;
@@ -204,27 +205,6 @@ public class ImusicActivity extends ListActivity implements HttpDownloadUtil.Cal
         super.onDestroy();
         getApplicationContext().unbindService(mPlaybackConnection);
     }
-
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-/*
-        if (mCursor == null ||mCursor.getCount() == 0) {
-            return;
-        }
-        mCursor.moveToPosition(position);
-        String url = mCursor
-                .getString(mCursor
-                        .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-        mMusicPlayerService.setDataSource(url);
-        mMusicPlayerService.start();
-        */
-    }
-
-
-
-
-
-
 
     public void notifyResult(boolean re)
     {
