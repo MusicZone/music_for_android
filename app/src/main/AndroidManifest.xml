@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".main.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,11 +25,13 @@
 
         <activity
             android:name=".main.ImusicActivity"
-            android:label="@string/title_activity_imusic" >
+            android:label="@string/title_activity_imusic"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".main.LocalActivity"
-            android:label="@string/title_activity_local" >
+            android:label="@string/title_activity_local"
+            android:screenOrientation="portrait" >
         </activity>
 
 

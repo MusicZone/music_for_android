@@ -69,6 +69,8 @@ public class FileUtils {
      */
     public File writeToSDfromInput(String path,String fileName,InputStream inputStream){
         //createSDDir(path);
+        if(inputStream == null)
+            return null;
         File file=createSDFile(path+fileName);
         OutputStream outStream=null;
         try {

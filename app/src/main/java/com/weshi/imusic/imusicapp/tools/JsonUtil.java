@@ -13,10 +13,24 @@ import android.util.Log;
 
 public class JsonUtil {
 
+    public static String parserDate(String s){
+        HashMap<String, String>[] re=null;
+        String temp="";
+        try {
+            JSONObject jsonObj = new JSONObject(s);
+            temp = jsonObj.getString("refreshment");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
+
     public static HashMap<String, String>[] parserAbstract(String s){
         HashMap<String, String>[] re=null;
         try {
-            JSONArray jsonObjs = new JSONArray(s);
+            JSONObject jsonObj = new JSONObject(s);
+            String temp = jsonObj.getString("data");
+            JSONArray jsonObjs = new JSONArray(temp);
             int count =jsonObjs.length();
             re = new HashMap[count];
             for(int i=0;i<count;i++){

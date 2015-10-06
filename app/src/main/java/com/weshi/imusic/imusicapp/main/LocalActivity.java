@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -19,16 +20,19 @@ import android.widget.TextView;
 
 import com.weshi.imusic.imusicapp.R;
 
+import java.io.File;
+
 public class LocalActivity extends ListActivity {
 
 
     private ImusicService mMusicPlayerService = null;
     private MusicInfoController mMusicInfoController = null;
     private Cursor mCursor = null;
+    private MusicListAdapter mAdapter;
 
-    private TextView mTextView = null;
-    private Button mPlayPauseButton = null;
-    private Button mStopButton = null;
+    //private TextView mTextView = null;
+    //private Button mPlayPauseButton = null;
+    //private Button mStopButton = null;
 
 
     private ServiceConnection mPlaybackConnection = new ServiceConnection()
@@ -36,6 +40,26 @@ public class LocalActivity extends ListActivity {
         public void onServiceConnected(ComponentName className, IBinder service)
         {
             mMusicPlayerService = ((ImusicService.LocalBinder)service).getService();
+
+            mCursor = mMusicInfoController.getAllSongs();
+
+
+            //ListAdapter adapter = new MusicListAdapter(this, android.R.layout.simple_expandable_list_item_2, mCursor, new String[]{}, new int[]{});
+            mAdapter = new MusicListAdapter(
+                    LocalActivity.this,
+                    new MusicListAdapter.CallBack(){
+                        public void refresh() {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    },
+                    R.layout.list_item,
+                    mCursor,
+                    new String[]{},
+                    new int[]{},
+                    mMusicPlayerService
+            );
+
+            setListAdapter(mAdapter);
         }
         public void onServiceDisconnected(ComponentName className)
         {
@@ -43,19 +67,34 @@ public class LocalActivity extends ListActivity {
         }
     };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     protected BroadcastReceiver mPlayerEvtReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(ImusicService.PLAYER_PREPARE_END)) {
+            if (action.equals(ImusicService.PLAYER_PREPARE_END_L)) {
                 // will begin to play
-                mTextView.setVisibility(View.INVISIBLE);
-                mPlayPauseButton.setVisibility(View.VISIBLE);
-                mStopButton.setVisibility(View.VISIBLE);
+                //mTextView.setVisibility(View.INVISIBLE);
+                //mPlayPauseButton.setVisibility(View.VISIBLE);
+                //mStopButton.setVisibility(View.VISIBLE);
 
-                mPlayPauseButton.setText(R.string.pause);
-            } else if(action.equals(ImusicService.PLAY_COMPLETED)) {
-                mPlayPauseButton.setText(R.string.play);
+                //mPlayPauseButton.setText(R.string.pause);
+            } else if(action.equals(ImusicService.PLAY_COMPLETED_L)) {
+                //mPlayPauseButton.setText(R.string.play);
+                if(mAdapter.playedView != null)
+                    mAdapter.playedView.setBackgroundResource(R.drawable.play);
             }
         }
     };
@@ -63,64 +102,30 @@ public class LocalActivity extends ListActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_imusic);
-
-
-
-
-
-
+        setContentView(R.layout.activity_local);
         mMusicInfoController = MusicInfoController.getInstance(this);
 
-        //startService(new Intent(this,ImusicService.class));
-        //bindService(new Intent(this,ImusicService.class), mPlaybackConnection, Context.BIND_AUTO_CREATE);
-
-
-        mTextView = (TextView)findViewById(R.id.show_text);
-        mPlayPauseButton = (Button) findViewById(R.id.play_pause_btn);
-        mStopButton = (Button) findViewById(R.id.stop_btn);
-
-        mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                if (mMusicPlayerService != null && mMusicPlayerService.isPlaying()) {
-                    mMusicPlayerService.pause();
-                    mPlayPauseButton.setText(R.string.play);
-                } else if (mMusicPlayerService != null){
-                    mMusicPlayerService.start();
-                    mPlayPauseButton.setText(R.string.pause);
-                }
-            }
-        });
-
-        mStopButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                if (mMusicPlayerService != null ) {
-                    mTextView.setVisibility(View.VISIBLE);
-                    mPlayPauseButton.setVisibility(View.INVISIBLE);
-                    mStopButton.setVisibility(View.INVISIBLE);
-                    mMusicPlayerService.stop();
-                }
-            }
-        });
+        startService(new Intent(this, ImusicService.class));
+        getApplicationContext().bindService(new Intent(this, ImusicService.class), mPlaybackConnection, Context.BIND_AUTO_CREATE);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ImusicService.PLAYER_PREPARE_END);
-        filter.addAction(ImusicService.PLAY_COMPLETED);
+        filter.addAction(ImusicService.PLAYER_PREPARE_END_L);
+        filter.addAction(ImusicService.PLAY_COMPLETED_L);
         registerReceiver(mPlayerEvtReceiver, filter);
     }
 
     protected void onResume() {
         super.onResume();
-        mCursor = mMusicInfoController.getAllSongs();
 
-        //ListAdapter adapter = new MusicListAdapter(this, android.R.layout.simple_expandable_list_item_2, mCursor, new String[]{}, new int[]{});
-        ListAdapter adapter = new MusicListAdapter(this, R.layout.list_item, mCursor, new String[]{}, new int[]{});
-
-        setListAdapter(adapter);
     }
-
+    protected void onPause(){
+        super.onPause();
+        if (mMusicPlayerService != null && mMusicPlayerService.isPlayingL()) {
+            mMusicPlayerService.pauseL();
+            mAdapter.playedView.setBackgroundResource(R.drawable.play);
+        }
+    }
+/*
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
@@ -131,7 +136,14 @@ public class LocalActivity extends ListActivity {
         String url = mCursor
                 .getString(mCursor
                         .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-        mMusicPlayerService.setDataSource(url);
-        mMusicPlayerService.start();
+        mMusicPlayerService.setDataSourceL(url);
+        mMusicPlayerService.startL();
+    }*/
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        getApplicationContext().unbindService(mPlaybackConnection);
     }
+
 }

@@ -11,6 +11,8 @@ public class MusicInfoController {
     private static MusicInfoController mInstance = null;
 
     private Activity pAct = null;
+    private ContentResolver resolver;
+
 
     public static MusicInfoController getInstance(Activity act) {
         if (mInstance == null) {
@@ -28,9 +30,8 @@ public class MusicInfoController {
     public Activity getMusicPlayer() {
         return pAct;
     }
-
     private Cursor query(Uri uri, String[] prjs, String selections, String[] selectArgs, String order) {
-        ContentResolver resolver = pAct.getContentResolver();
+        resolver = pAct.getContentResolver();
         if (resolver == null) {
             return null;
         }
