@@ -12,8 +12,8 @@
     <string name="soft_update_later">Later</string>
     <string name="soft_updating">Updating...</string>
     <string name="soft_update_cancel">Cancel</string>
-    <string name="Server_Url">http://app.imusic.ren/imusic/?</string>
-    <string name="bbs_Url">http://bbs.imusic.ren/imusic</string>
+    <string name="Server_Url">http://www.imusic.ren/app/?</string>
+    <string name="bbs_Url">http://www.imusic.ren/bbs</string>
 
 
     <string name="no_music">手机和SDCARD中都没有发现音频文件</string>
