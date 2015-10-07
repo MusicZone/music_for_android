@@ -12,25 +12,31 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class JsonUtil {
-
+/*
     public static String parserDate(String s){
         HashMap<String, String>[] re=null;
         String temp="";
+        String ret="";
         try {
             JSONObject jsonObj = new JSONObject(s);
             temp = jsonObj.getString("refreshment");
+            JSONArray jsonObjs = new JSONArray(temp);
+            int count =jsonObjs.length();
+            if(count>0){
+                JSONObject jb = jsonObjs.getJSONObject(0);
+                ret=jb.getString("date");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return temp;
-    }
+        return ret;
+    }*/
 
     public static HashMap<String, String>[] parserAbstract(String s){
         HashMap<String, String>[] re=null;
         try {
-            JSONObject jsonObj = new JSONObject(s);
-            String temp = jsonObj.getString("data");
-            JSONArray jsonObjs = new JSONArray(temp);
+            JSONArray jsonObjs = new JSONArray(s);
             int count =jsonObjs.length();
             re = new HashMap[count];
             for(int i=0;i<count;i++){

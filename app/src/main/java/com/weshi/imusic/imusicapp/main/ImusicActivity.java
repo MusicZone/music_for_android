@@ -120,26 +120,37 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                             Log.d(TAG, "File do not exist!");
                     }else{
                         mPlayPauseButton.setBackgroundResource(R.drawable.play);
-                        SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("mark", dataStr);
-                        editor.commit();
+                        //SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
+                        //SharedPreferences.Editor editor = settings.edit();
+                        //editor.putString("mark", dataStr);
+                        //editor.commit();
 
                         Thread mAbstractThread=new Thread(AbstractInfo);
                         mAbstractThread.start();
+                        SongID=0;
                     }
                 }else{
                     SongID++;
+                    headPlay=true;
                     if(playHeads != null && playHeads.length>SongID){
                         HashMap<String, String> det = playHeads[SongID];
                         String aurl = det.get("url");
 
-                        headPlay=true;
+
                         Log.d(TAG, "After Song, play head:"+aurl);
                         mMusicPlayerService.setDataSourceI(aurl);
                         mMusicPlayerService.startI();
 
                     }else{
+                        mPlayPauseButton.setBackgroundResource(R.drawable.play);
+                        //SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
+                        //SharedPreferences.Editor editor = settings.edit();
+                        //editor.putString("mark", dataStr);
+                        //editor.commit();
+
+                        Thread mAbstractThread=new Thread(AbstractInfo);
+                        mAbstractThread.start();
+                        SongID=0;
 /*
                         headPlay = false;
 
@@ -257,7 +268,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     strResult = EntityUtils.toString(httpResponse.getEntity());
                 }
                 playHeads = jsonparser.parserAbstract(strResult);
-                dataStr = jsonparser.parserDate(strResult);
+                //dataStr = jsonparser.parserDate(strResult);
                 mHandler.obtainMessage(QUERY_ABSTRACT_SUCCESS).sendToTarget();
             } catch (Exception e) {
                 mHandler.obtainMessage(QUERY_ABSTRACT_FAILURE).sendToTarget();
@@ -298,13 +309,13 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                 case QUERY_ABSTRACT_SUCCESS:
 
 
-                    SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
-                    String mark_recorded = settings.getString("mark", "");
+                    //SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
+                    //String mark_recorded = settings.getString("mark", "");
 
-                    if(!mark_recorded.equals(dataStr)) {
+                    //if(!mark_recorded.equals(dataStr)) {
                         Thread mAlbumsThread = new Thread(AlbumsInfo);
                         mAlbumsThread.start();
-                    }
+                    //}
                     break;
                 case QUERY_ALBUMS_SUCCESS:
 
