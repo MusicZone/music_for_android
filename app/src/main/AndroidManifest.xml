@@ -20,9 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
         <activity
             android:name=".main.ImusicActivity"
             android:label="@string/title_activity_imusic"
@@ -34,12 +31,16 @@
             android:screenOrientation="portrait" >
         </activity>
 
-
         <service
             android:name=".main.ImusicService"
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".main.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
     </application>
 
 </manifest>

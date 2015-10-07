@@ -44,5 +44,14 @@ public class MainActivity extends TabActivity {
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
+        //第三个Tab
+        intent = new Intent(this,AboutActivity.class);//第二个Intent用作Tab1显示的内容
+        spec = tabHost.newTabSpec("tab3")//新建一个 Tab
+                //.setIndicator("Tab2", res.getDrawable(android.R.drawable.ic_menu_edit))//设置名称以及图标
+                .setIndicator("关于")//设置名称以及图标
+                .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
+        tabHost.addTab(spec);//添加进tabHost
+
+
     }
 }
