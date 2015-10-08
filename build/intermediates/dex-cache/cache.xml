@@ -9,25 +9,18 @@
         <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-7155aab1f5327d54a15827ad45b1584471b39d8e.jar" />
     </item>
     <item
-        jar="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
+        jar="/Users/apple28/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.0.0/support-v4-19.0.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-1e245d52f2c3446979412daf13aa8231811ec7b1.jar" />
+        sha1="afee690af14bd2c32d400cdf78e746fd45c386fa">
+        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/pre-dexed/debug/support-v4-19.0.0-86203853583e9168c930c080d7b2233527366242.jar" />
     </item>
     <item
-        jar="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
+        jar="/Users/apple28/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.1/support-annotations-22.2.1.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="f8efd0096475e0daf054267b61544e10dc776503">
-        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/pre-dexed/debug/classes-77856064d893401f3a53f01ec7a72232ba9f631a.jar" />
-    </item>
-    <item
-        jar="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/pre-dexed/debug/classes-6de6cf072f7fe478105bea6377af89da95f07895.jar" />
+        sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
+        <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-c303afd515d041822f3137b148520016ce4115ae.jar" />
     </item>
     <item
         jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
@@ -37,11 +30,11 @@
         <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/classes-06e712eddf17c8fce9216d6a9cc243bd4cfed2bd.jar" />
     </item>
     <item
-        jar="/Users/apple28/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.1/support-annotations-22.2.1.jar"
+        jar="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.0.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
-        <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-c303afd515d041822f3137b148520016ce4115ae.jar" />
+        sha1="eb69b5c2e53e59d82f7439f3217f46f9d98f0c89">
+        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/app/build/intermediates/pre-dexed/debug/classes-7850fdd0de1f586885ee043e9b4725c7c2c6e935.jar" />
     </item>
     <item
         jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"

@@ -1,11 +1,17 @@
 package com.weshi.imusic.imusicapp.main;
 
+import android.app.ActionBar;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 import com.weshi.imusic.imusicapp.R;
 import com.weshi.imusic.imusicapp.update.UpdateManager;
@@ -52,6 +58,24 @@ public class MainActivity extends TabActivity {
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
+        TabWidget tw = tabHost.getTabWidget();
+        setStyle(tw.getChildAt(0));
+        setStyle(tw.getChildAt(1));
+        setStyle(tw.getChildAt(2));
+        tw.getChildAt(1).setClickable(false);
+        tw.getChildAt(2).setClickable(false);//.getTabWidget().setEnabled(en); //.getChildAt(1).setClickable(en);
 
+
+
+
+    }
+    private void setStyle(View v){
+        final TextView tv = (TextView)v.findViewById(android.R.id.title);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)tv.getLayoutParams();
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,0);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        params.height=LinearLayout.LayoutParams.WRAP_CONTENT;
+        v.getLayoutParams().height=100;//LinearLayout.LayoutParams.WRAP_CONTENT;
+        //v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 }

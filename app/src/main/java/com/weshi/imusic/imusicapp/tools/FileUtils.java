@@ -9,6 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
 
@@ -105,7 +109,28 @@ public class FileUtils {
 
 
     }
+    public static void getMediaFiles(Context ctx){
+        File file = new File(FileUtils.getFilePath("imusic/", ""));
 
+        if(file.exists() && file.isDirectory()){
+            File[] array = file.listFiles();
+
+            for(int i=0;i<array.length;i++){
+                File f = array[i];
+
+                if(f.isFile()){//FILE TYPE
+                    String name = f.getName();
+
+                    if(name.endsWith(".mp3")){
+                        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri uu = Uri.fromFile(f);
+                        scanIntent.setData(uu);
+                        ctx.sendBroadcast(scanIntent);
+                    }
+                }
+            }
+        }
+    }
 
     public static  String getFilePath(String path,String fileName){
         return (SDPath+path+fileName);

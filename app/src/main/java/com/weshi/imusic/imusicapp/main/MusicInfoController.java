@@ -42,7 +42,12 @@ public class MusicInfoController {
         // we only find the music under the folder of imusic which is located in the sdcard.
         String sdpath = Environment.getExternalStorageDirectory() + "/";
         String musicPath = sdpath + "imusic%";
-        return query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Audio.Media.DATA + " like ? ", new String[]{musicPath} , MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        return query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+                MediaStore.Audio.Media.DATA + " like ? ",
+                new String[]{musicPath} ,
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER
+        );
     }
 }
 

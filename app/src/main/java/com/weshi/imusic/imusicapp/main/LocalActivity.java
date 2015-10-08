@@ -12,15 +12,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.media.MediaScannerConnection;
+import android.media.MediaScannerConnection.OnScanCompletedListener;
 import com.weshi.imusic.imusicapp.R;
+import com.weshi.imusic.imusicapp.tools.FileUtils;
+import android.os.Environment;
 
 import java.io.File;
+import java.util.Locale;
 
 public class LocalActivity extends ListActivity {
 
@@ -29,7 +34,6 @@ public class LocalActivity extends ListActivity {
     private MusicInfoController mMusicInfoController = null;
     private Cursor mCursor = null;
     private MusicListAdapter mAdapter;
-
     //private TextView mTextView = null;
     //private Button mPlayPauseButton = null;
     //private Button mStopButton = null;
@@ -112,8 +116,8 @@ public class LocalActivity extends ListActivity {
         filter.addAction(ImusicService.PLAYER_PREPARE_END_L);
         filter.addAction(ImusicService.PLAY_COMPLETED_L);
         registerReceiver(mPlayerEvtReceiver, filter);
-    }
 
+    }
     protected void onResume() {
         super.onResume();
 

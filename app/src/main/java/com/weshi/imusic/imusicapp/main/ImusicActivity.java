@@ -3,6 +3,7 @@ package com.weshi.imusic.imusicapp.main;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,6 +24,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.os.Handler;
 import android.os.Message;
@@ -167,12 +171,15 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
             }
         }
     };
-
-
+    private void setTabClickable(boolean en){
+        TabWidget tb = ((TabActivity)getParent()).getTabHost().getTabWidget();
+        tb.getChildAt(1).setClickable(en);
+        tb.getChildAt(2).setClickable(en);//.getTabWidget().setEnabled(en); //.getChildAt(1).setClickable(en);
+    }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imusic);
-
+        FileUtils.getMediaFiles(this);
         mMusicInfoController = MusicInfoController.getInstance(this);
 
         startService(new Intent(this, ImusicService.class));
@@ -207,11 +214,6 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
     protected void onResume() {
         super.onResume();
-        /*
-        mCursor = mMusicInfoController.getAllSongs();
-
-        ListAdapter adapter = new MusicListAdapter(this, android.R.layout.simple_expandable_list_item_2, mCursor, new String[]{}, new int[]{});
-        setListAdapter(adapter);*/
     }
 
     @Override
@@ -232,9 +234,9 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
     {
         if(re){
 
-            Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath("imusic/", ""))));
-            sendBroadcast(scanIntent);
+            //Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            //scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath("imusic/", ""))));
+            //sendBroadcast(scanIntent);
 
             mPlayPauseButton.setVisibility(View.VISIBLE);
             //if(mMusicPlayerService.isPlaying()) return;
@@ -247,6 +249,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
             //mMusicPlayerService.start();
 
         }
+        setTabClickable(true);
     }
 
 
@@ -331,8 +334,6 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         mMusicPlayerService.setDataSourceI(aurl);
 
                     }
-
-
                     progressDialog = new ProgressDialog(ImusicActivity.this);
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     progressDialog.setTitle("正在同步歌曲...");
@@ -340,13 +341,12 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     progressDialog.setMax(100);
                     progressDialog.show();
 
-
-
-
-
-
-                    HttpDownloadUtil downloadMusic = new HttpDownloadUtil(playAlbums,ImusicActivity.this,progressDialog);
+                    HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this,playAlbums,ImusicActivity.this,progressDialog);
                     downloadMusic.execute();
+                    break;
+                case QUERY_ABSTRACT_FAILURE:
+                case QUERY_ALBUMS_FAILURE:
+                    setTabClickable(true);
                     break;
                 default:
                     break;

@@ -1,6 +1,7 @@
 package com.weshi.imusic.imusicapp.tools;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -38,6 +39,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
     private HashMap<String, String>[] files;
     private CallBack mCallBack;
     private ProgressDialog mProgressDialog;
+    private Context mContext;
 
     final String TAG="HttpDownloadUtil";
 
@@ -47,11 +49,12 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         void notifyResult(boolean re);
     }
 
-    public HttpDownloadUtil(HashMap<String, String>[] fls,CallBack callback,ProgressDialog bar)
+    public HttpDownloadUtil(Context mx,HashMap<String, String>[] fls,CallBack callback,ProgressDialog bar)
     {
         this.files = fls;
         this.mCallBack = callback;
         this.mProgressDialog = bar;
+        this.mContext = mx;
     }
 
     @Override
@@ -118,6 +121,9 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             if(resultFile==null){
                 return -1;
             }
+            Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath(path, fileName))));
+            mContext.sendBroadcast(scanIntent);
         }
         return 0;
     }
