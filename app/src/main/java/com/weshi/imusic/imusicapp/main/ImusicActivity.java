@@ -46,6 +46,7 @@ import com.weshi.imusic.imusicapp.tools.HttpDownloadUtil;
 import com.weshi.imusic.imusicapp.update.UpdateManager;
 import com.weshi.imusic.imusicapp.tools.JsonUtil;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.weshi.imusic.imusicapp.R;
 
@@ -58,6 +59,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
     private ImageButton mPlayPauseButton = null;
     private ProgressDialog progressDialog = null;
+    private ProgressBar mProgressBar = null;
 
     private HashMap<String, String>[] playHeads;
     private HashMap<String, String>[] playAlbums;
@@ -193,20 +195,10 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
 
 
+        mProgressBar = (ProgressBar) findViewById(R.id.waiting);
         mPlayPauseButton = (ImageButton) findViewById(R.id.imusicplay);
 
-        mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                if (mMusicPlayerService != null && mMusicPlayerService.isPlayingI()) {
-                    mMusicPlayerService.pauseI();
-                    mPlayPauseButton.setBackgroundResource(R.drawable.play);
-                } else if (mMusicPlayerService != null) {
-                    mMusicPlayerService.startI();
-                    mPlayPauseButton.setBackgroundResource(R.drawable.pause);
-                }
-            }
-        });
+
 
 
 
@@ -237,7 +229,19 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
             //Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             //scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath("imusic/", ""))));
             //sendBroadcast(scanIntent);
-
+            mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
+                public void onClick(View v) {
+                    // Perform action on click
+                    if (mMusicPlayerService != null && mMusicPlayerService.isPlayingI()) {
+                        mMusicPlayerService.pauseI();
+                        mPlayPauseButton.setBackgroundResource(R.drawable.play);
+                    } else if (mMusicPlayerService != null) {
+                        mMusicPlayerService.startI();
+                        mPlayPauseButton.setBackgroundResource(R.drawable.pause);
+                    }
+                }
+            });
+            mPlayPauseButton.setBackgroundResource(R.drawable.play);
             mPlayPauseButton.setVisibility(View.VISIBLE);
             //if(mMusicPlayerService.isPlaying()) return;
             //HashMap<String, String> det = playAlbums[SongID];
@@ -334,6 +338,9 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         mMusicPlayerService.setDataSourceI(aurl);
 
                     }
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBar.setEnabled(false);
+
                     progressDialog = new ProgressDialog(ImusicActivity.this);
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                     progressDialog.setTitle("正在同步歌曲...");
@@ -346,7 +353,22 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     break;
                 case QUERY_ABSTRACT_FAILURE:
                 case QUERY_ALBUMS_FAILURE:
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBar.setEnabled(false);
                     setTabClickable(true);
+                    mPlayPauseButton.setVisibility(View.VISIBLE);
+                    mPlayPauseButton.setBackgroundResource(R.drawable.reload);
+                    mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
+                        public void onClick(View v) {
+                            // Perform action on click
+                            Thread mAbstractThread = new Thread(AbstractInfo);
+                            mAbstractThread.start();
+                            mPlayPauseButton.setVisibility(View.GONE);
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            mProgressBar.setEnabled(true);
+                        }
+                    });
+                    Toast.makeText(ImusicActivity.this,"请连接网络后重新刷新歌单!",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

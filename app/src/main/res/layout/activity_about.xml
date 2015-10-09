@@ -17,14 +17,24 @@
         android:src="@drawable/icon" />
 
     <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="@string/app_name"
+    android:id="@+id/name"
+    android:layout_below="@+id/imageView"
+    android:layout_centerHorizontal="true"
+    android:textSize="30dp"
+    android:textColor="@android:color/black" />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/app_name"
-        android:id="@+id/name"
-        android:layout_below="@+id/imageView"
+        android:text="@string/app_version"
+        android:id="@+id/version"
+        android:layout_below="@+id/name"
         android:layout_centerHorizontal="true"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:textColor="@android:color/black" />
     <TextView
         android:layout_width="wrap_content"
@@ -32,7 +42,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/bbs_Url"
         android:id="@+id/bbs"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/version"
         android:layout_centerHorizontal="true"
         android:textSize="20dp"
         android:textColor="@android:color/black" />
