@@ -18,7 +18,7 @@ public class ImusicService extends Service {
     public static final String PLAY_COMPLETED_I = "com.weshi.imusic.iplaycompleted";
     public static final String PLAYER_PREPARE_END_L = "com.weshi.imusic.lprepared";
     public static final String PLAY_COMPLETED_L = "com.weshi.imusic.lplaycompleted";
-
+    public static final String PLAY_ERROR_I = "com.weshi.imusic.ierror";
     MediaPlayer.OnCompletionListener mCompleteListenerI = new MediaPlayer.OnCompletionListener() {
         public void onCompletion(MediaPlayer mp) {
             broadcastEvent(PLAY_COMPLETED_I);
@@ -41,18 +41,18 @@ public class ImusicService extends Service {
             broadcastEvent(PLAYER_PREPARE_END_L);
         }
     };
-/*
+
     MediaPlayer.OnErrorListener mErrorListener = new MediaPlayer.OnErrorListener()
     {
         @Override
         public boolean onError(MediaPlayer arg0, int arg1, int arg2)
         {
             // TODO Auto-generated method stub
-
+            broadcastEvent(PLAY_ERROR_I);
             return false;
         }
     };
-*/
+
 
     private void broadcastEvent(String what) {
         Intent i = new Intent(what);

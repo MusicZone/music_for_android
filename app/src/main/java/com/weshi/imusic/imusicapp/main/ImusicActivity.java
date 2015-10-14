@@ -112,19 +112,41 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
             } else if(action.equals(ImusicService.PLAY_COMPLETED_I)) {
                 //mPlayPauseButton.setText(R.string.play);
                 if(headPlay){
-                    headPlay = false;
+
 
                     if(SongID<playAlbums.length) {
                         HashMap<String, String> det = playAlbums[SongID];
-
+                        String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
+                        Log.d(TAG, "After Head, play song:" + aurl + "songid:" + SongID);
+                        mMusicPlayerService.setDataSourceI(aurl);
                         if (FileUtils.isFileExist("imusic/", det.get("name"))) {
-                            String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
-                            Log.d(TAG, "After Head, play song:" + aurl + "songid:" + SongID);
-                            mMusicPlayerService.setDataSourceI(aurl);
+                            headPlay = false;
                             mMusicPlayerService.startI();
-                        }else
+                        }else{
+                            headPlay = true;
                             Log.d(TAG, "File do not exist!");
+
+                            mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
+                                public void onClick(View v) {
+                                    // Perform action on click
+                                    progressDialog = new ProgressDialog(ImusicActivity.this);
+                                    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                    progressDialog.setTitle("正在同步歌曲...");
+                                    progressDialog.setProgress(0);
+                                    progressDialog.setMax(100);
+                                    progressDialog.show();
+
+                                    HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
+                                    downloadMusic.execute();
+                                }
+                            });
+                            mPlayPauseButton.setBackgroundResource(R.drawable.play);
+                            mPlayPauseButton.setVisibility(View.VISIBLE);
+                            setTabClickable(true);
+                            Toast.makeText(ImusicActivity.this,"请连接网络后重试!",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
+                        headPlay = false;
                         mPlayPauseButton.setBackgroundResource(R.drawable.play);
                         //SharedPreferences settings = getSharedPreferences("imusic", Activity.MODE_PRIVATE);
                         //SharedPreferences.Editor editor = settings.edit();
@@ -170,6 +192,8 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     }
 
                 }
+            } else if(action.equals(ImusicService.PLAY_ERROR_I)) {
+
             }
         }
     };
@@ -191,6 +215,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
         IntentFilter filter = new IntentFilter();
         filter.addAction(ImusicService.PLAYER_PREPARE_END_I);
         filter.addAction(ImusicService.PLAY_COMPLETED_I);
+        filter.addAction(ImusicService.PLAY_ERROR_I);
         registerReceiver(mPlayerEvtReceiver, filter);
 
 
@@ -241,7 +266,8 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     }
                 }
             });
-            mPlayPauseButton.setBackgroundResource(R.drawable.play);
+            mMusicPlayerService.startI();
+            mPlayPauseButton.setBackgroundResource(R.drawable.pause);
             mPlayPauseButton.setVisibility(View.VISIBLE);
             //if(mMusicPlayerService.isPlaying()) return;
             //HashMap<String, String> det = playAlbums[SongID];
@@ -253,7 +279,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
             //mMusicPlayerService.start();
 
         }
-        setTabClickable(true);
+
     }
 
 
@@ -341,15 +367,26 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     mProgressBar.setVisibility(View.GONE);
                     mProgressBar.setEnabled(false);
 
-                    progressDialog = new ProgressDialog(ImusicActivity.this);
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    progressDialog.setTitle("正在同步歌曲...");
-                    progressDialog.setProgress(0);
-                    progressDialog.setMax(100);
-                    progressDialog.show();
 
-                    HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this,playAlbums,ImusicActivity.this,progressDialog);
-                    downloadMusic.execute();
+                    mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
+                        public void onClick(View v) {
+                            // Perform action on click
+                            progressDialog = new ProgressDialog(ImusicActivity.this);
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                            progressDialog.setTitle("正在同步歌曲...");
+                            progressDialog.setProgress(0);
+                            progressDialog.setMax(100);
+                            progressDialog.show();
+
+                            HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
+                            downloadMusic.execute();
+                        }
+                    });
+                    mPlayPauseButton.setBackgroundResource(R.drawable.play);
+                    mPlayPauseButton.setVisibility(View.VISIBLE);
+                    setTabClickable(true);
+
+
                     break;
                 case QUERY_ABSTRACT_FAILURE:
                 case QUERY_ALBUMS_FAILURE:
