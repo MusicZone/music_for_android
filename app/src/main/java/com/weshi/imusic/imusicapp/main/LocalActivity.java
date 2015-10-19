@@ -99,10 +99,18 @@ public class LocalActivity extends ListActivity {
                 //mPlayPauseButton.setText(R.string.play);
                 if(mAdapter.playedView != null)
                     mAdapter.playedView.setBackgroundResource(R.drawable.play);
-            }
+            }/* else if(action.equals(Intent.ACTION_SCREEN_OFF)) {
+                //mPlayPauseButton.setText(R.string.play);
+                screenoff = true;
+            }*/
         }
     };
-
+    public void stopMusic() {
+        if (mMusicPlayerService != null && mMusicPlayerService.isPlayingL()) {
+            mMusicPlayerService.pauseL();
+            mAdapter.playedView.setBackgroundResource(R.drawable.play);
+        }
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,19 +123,25 @@ public class LocalActivity extends ListActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ImusicService.PLAYER_PREPARE_END_L);
         filter.addAction(ImusicService.PLAY_COMPLETED_L);
+
+        //filter.addAction(Intent.ACTION_SCREEN_ON);
+        //filter.addAction(Intent.ACTION_SCREEN_OFF);
+
         registerReceiver(mPlayerEvtReceiver, filter);
+
 
     }
     protected void onResume() {
         super.onResume();
 
+        //screenoff = false;
     }
     protected void onPause(){
-        super.onPause();
-        if (mMusicPlayerService != null && mMusicPlayerService.isPlayingL()) {
+        super.onPause();/*
+        if (mMusicPlayerService != null && mMusicPlayerService.isPlayingL() && !screenoff) {
             mMusicPlayerService.pauseL();
             mAdapter.playedView.setBackgroundResource(R.drawable.play);
-        }
+        }*/
     }
 /*
     protected void onListItemClick(ListView l, View v, int position, long id) {

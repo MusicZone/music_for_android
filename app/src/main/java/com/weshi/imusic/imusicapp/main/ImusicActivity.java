@@ -241,12 +241,17 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
     @Override
     protected void onPause(){
-        super.onPause();
+        super.onPause();/*
         if(mMusicPlayerService !=null && mMusicPlayerService.isPlayingI())
         mMusicPlayerService.pauseI();
-        mPlayPauseButton.setBackgroundResource(R.drawable.play);
+        mPlayPauseButton.setBackgroundResource(R.drawable.play);*/
     }
-
+    public void stopMusic() {
+        if(mMusicPlayerService !=null && mMusicPlayerService.isPlayingI()) {
+            mMusicPlayerService.pauseI();
+            mPlayPauseButton.setBackgroundResource(R.drawable.play);
+        }
+    }
     public void notifyResult(boolean re)
     {
         if(re){

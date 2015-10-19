@@ -1,6 +1,7 @@
 package com.weshi.imusic.imusicapp.main;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -57,6 +58,37 @@ public class MainActivity extends TabActivity {
                 .setIndicator("关于")//设置名称以及图标
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                Activity current = getCurrentActivity();
+                if(current instanceof ImusicActivity){
+                    Activity lastone = getLocalActivityManager().getActivity("tab2");
+                    if(lastone instanceof LocalActivity){
+                        ((LocalActivity)lastone).stopMusic();
+                    }
+
+                }else if(current instanceof LocalActivity){
+                    Activity lastone = getLocalActivityManager().getActivity("tab1");
+                    if(lastone instanceof ImusicActivity){
+                        ((ImusicActivity)lastone).stopMusic();
+                    }
+
+                }else{
+                    Activity lastone = getLocalActivityManager().getActivity("tab2");
+                    if(lastone instanceof LocalActivity){
+                        ((LocalActivity)lastone).stopMusic();
+                    }
+                    lastone = getLocalActivityManager().getActivity("tab1");
+                    if(lastone instanceof ImusicActivity){
+                        ((ImusicActivity)lastone).stopMusic();
+                    }
+                }
+            }
+        });
+
+
 
         TabWidget tw = tabHost.getTabWidget();
         setStyle(tw.getChildAt(0));
