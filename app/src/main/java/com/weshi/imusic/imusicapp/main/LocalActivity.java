@@ -162,6 +162,7 @@ public class LocalActivity extends ListActivity {
     protected void onDestroy(){
         super.onDestroy();
         getApplicationContext().unbindService(mPlaybackConnection);
+        stopMusic();
     }
 
 }

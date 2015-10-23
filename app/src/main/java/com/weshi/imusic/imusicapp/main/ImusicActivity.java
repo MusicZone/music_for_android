@@ -237,6 +237,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
     protected void onDestroy(){
         super.onDestroy();
         getApplicationContext().unbindService(mPlaybackConnection);
+        stopMusic();
     }
 
     @Override
@@ -399,7 +400,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     mProgressBar.setEnabled(false);
                     setTabClickable(true);
                     mPlayPauseButton.setVisibility(View.VISIBLE);
-                    mPlayPauseButton.setBackgroundResource(R.drawable.reload);
+                    mPlayPauseButton.setBackgroundResource(R.drawable.reload);// .seBackgroundResource(R.drawable.reload);
                     mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
                         public void onClick(View v) {
                             // Perform action on click

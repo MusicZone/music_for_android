@@ -39,7 +39,7 @@ public class MainActivity extends TabActivity {
         intent = new Intent(this,ImusicActivity.class);//新建一个Intent用作Tab1显示的内容
         spec = tabHost.newTabSpec("tab1")//新建一个 Tab
                 //.setIndicator("Tab1", res.getDrawable(android.R.drawable.ic_media_play))//设置名称以及图标
-                .setIndicator("Imusic")//设置名称以及图标
+                .setIndicator("iMusic")//设置名称以及图标
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
