@@ -13,7 +13,7 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
             android:name=".main.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,12 +23,12 @@
         <activity
             android:name=".main.ImusicActivity"
             android:label="@string/title_activity_imusic"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".main.LocalActivity"
             android:label="@string/title_activity_local"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:launchMode="singleTask">
         </activity>
 
         <service
@@ -39,7 +39,7 @@
 
         <activity
             android:name=".main.AboutActivity"
-            android:label="@string/title_activity_about" >
+            android:label="@string/title_activity_about" android:launchMode="singleTask">
         </activity>
 
 

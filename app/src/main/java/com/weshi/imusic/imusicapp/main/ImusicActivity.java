@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,7 +61,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
     private ImageButton mPlayPauseButton = null;
     private ProgressDialog progressDialog = null;
     private ProgressBar mProgressBar = null;
-
+    private TextView mTextView = null;
     private HashMap<String, String>[] playHeads;
     private HashMap<String, String>[] playAlbums;
 
@@ -110,6 +111,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
 
             } else if(action.equals(ImusicService.PLAY_COMPLETED_I)) {
+                mTextView.setText("");
                 //mPlayPauseButton.setText(R.string.play);
                 if(headPlay){
 
@@ -121,6 +123,18 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         mMusicPlayerService.setDataSourceI(aurl);
                         if (FileUtils.isFileExist("imusic/", det.get("name"))) {
                             headPlay = false;
+
+                            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                            try {
+                                mmr.setDataSource(aurl);
+                                String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                                if(title == null){
+                                    title = det.get("name");
+                                }
+                                mTextView.setText(title);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             mMusicPlayerService.startI();
                         }else{
                             headPlay = true;
@@ -222,7 +236,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
         mProgressBar = (ProgressBar) findViewById(R.id.waiting);
         mPlayPauseButton = (ImageButton) findViewById(R.id.imusicplay);
-
+        mTextView = (TextView) findViewById(R.id.title);
 
 
 
