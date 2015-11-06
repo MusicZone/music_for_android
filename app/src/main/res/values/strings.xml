@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">爱音乐</string>
+    <string name="app_name">iMusic</string>
     <string name="app_version">V1.0a(内测)</string>
     <string name="title_activity_imusic">ImusicActivity</string>
 

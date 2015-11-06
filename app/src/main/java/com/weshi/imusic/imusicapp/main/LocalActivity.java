@@ -1,6 +1,7 @@
 package com.weshi.imusic.imusicapp.main;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,9 +12,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,10 +25,17 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.OnScanCompletedListener;
 import com.weshi.imusic.imusicapp.R;
 import com.weshi.imusic.imusicapp.tools.FileUtils;
+import com.weshi.imusic.imusicapp.tools.HttpDownloadUtil;
+
 import android.os.Environment;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Toast;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class LocalActivity extends ListActivity {
 
@@ -34,6 +44,7 @@ public class LocalActivity extends ListActivity {
     private MusicInfoController mMusicInfoController = null;
     private Cursor mCursor = null;
     private MusicListAdapter mAdapter;
+    private ListView lv;
     //private TextView mTextView = null;
     //private Button mPlayPauseButton = null;
     //private Button mStopButton = null;
@@ -54,6 +65,15 @@ public class LocalActivity extends ListActivity {
                     new MusicListAdapter.CallBack(){
                         public void refresh() {
                             mAdapter.notifyDataSetChanged();
+                        }
+                        public void scroll() {
+                            int a = lv.getLastVisiblePosition();
+                            a = mAdapter.nowpos;
+                            if(lv.getLastVisiblePosition() == mAdapter.nowpos //last in the view
+                                    && lv.getLastVisiblePosition() !=(lv.getCount()-1)){ //not down to bottom
+                                //lv.setSelection(mAdapter.nowpos + 1);
+                                lv.smoothScrollToPosition(mAdapter.nowpos + 1);
+                            }
                         }
                     },
                     R.layout.list_item,
@@ -84,6 +104,7 @@ public class LocalActivity extends ListActivity {
 
 
 
+
     protected BroadcastReceiver mPlayerEvtReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -97,12 +118,18 @@ public class LocalActivity extends ListActivity {
                 //mPlayPauseButton.setText(R.string.pause);
             } else if(action.equals(ImusicService.PLAY_COMPLETED_L)) {
                 //mPlayPauseButton.setText(R.string.play);
-                if(mAdapter.playedView != null)
-                    mAdapter.playedView.setBackgroundResource(R.drawable.play);
+                //if(mAdapter.playedView != null)
+                //    mAdapter.playedView.setBackgroundResource(R.drawable.play);
+                mAdapter.playNext();
+                if(lv.getLastVisiblePosition() == mAdapter.nowpos //last in the view
+                        && lv.getLastVisiblePosition() !=(lv.getCount()-1)){ //not down to bottom
+                    lv.smoothScrollToPosition(mAdapter.nowpos + 1);
+                }
             }/* else if(action.equals(Intent.ACTION_SCREEN_OFF)) {
                 //mPlayPauseButton.setText(R.string.play);
                 screenoff = true;
             }*/
+
         }
     };
     public void stopMusic() {
@@ -128,7 +155,27 @@ public class LocalActivity extends ListActivity {
         //filter.addAction(Intent.ACTION_SCREEN_OFF);
 
         registerReceiver(mPlayerEvtReceiver, filter);
+        lv = getListView();
 
+/*
+        ListView lv = getListView();
+        lv.setOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case OnScrollListener.SCROLL_STATE_IDLE:
+                        if (view.getLastVisiblePosition() != (view.getCount() - 1)) {
+                            view.setSelection(view.getSelectedItemPosition()+1);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+            }
+        });*/
 
     }
     protected void onResume() {

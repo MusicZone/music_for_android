@@ -270,7 +270,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
     public void notifyResult(boolean re)
     {
         if(re){
-
+            mTextView.setText("");
             //Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             //scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath("imusic/", ""))));
             //sendBroadcast(scanIntent);
@@ -405,6 +405,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     mPlayPauseButton.setBackgroundResource(R.drawable.play);
                     mPlayPauseButton.setVisibility(View.VISIBLE);
                     setTabClickable(true);
+                    mTextView.setText("播放过程需要使用网络流量，最好使用WIFI网络！");
 
 
                     break;

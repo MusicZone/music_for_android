@@ -29,11 +29,38 @@ class MusicListAdapter extends SimpleCursorAdapter {
     private Cursor mCursor;
 
 
+    private ImageButton[] buttonlist;
+    public int nowpos=-1;
+
 
     public interface CallBack {
         public void refresh();
+        public void scroll();
     }
+    public void playNext(){
+        //this.mCursor.moveToNext();
+        //final String path = this.mCursor.getString(this.mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+//here
 
+
+        ImageButton btn = (ImageButton)buttonlist[nowpos];
+        if (btn != null)
+            btn.setBackgroundResource(R.drawable.play);
+
+        if(nowpos<buttonlist.length-1) {
+            mCursor.moveToPosition(nowpos + 1);
+            String path = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+
+            service.setDataSourceL(path);
+            service.startL();
+            ImageButton btnnext = (ImageButton) buttonlist[nowpos + 1];
+            btnnext.setBackgroundResource(R.drawable.pause);
+
+            nowpos = nowpos + 1;
+        }else{
+            nowpos = -1;
+        }
+    }
 
     public MusicListAdapter(Context context,CallBack call, int layout, Cursor c,
                             String[] from, int[] to,ImusicService service) {
@@ -42,6 +69,7 @@ class MusicListAdapter extends SimpleCursorAdapter {
         this.mContext = context;
         this.mCallBack = call;
         this.mCursor = c;
+        this.buttonlist = new ImageButton[mCursor.getCount()];
     }
 
     public void bindView(View view, Context context, Cursor cursor) {
@@ -67,12 +95,18 @@ class MusicListAdapter extends SimpleCursorAdapter {
             }
         });
 
+        final int pos = cursor.getPosition();
+        buttonlist[pos]=playpausebutton;
+        //titleView.setText(Integer.toString(pos));
         playpausebutton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                if (playedView == v) {
+                ImageButton btn = null;
+                if (nowpos != -1) {
+                    btn = (ImageButton) buttonlist[nowpos];
+                }
+                if (btn == v) {
                     if (service != null && service.isPlayingL()) {
                         service.pauseL();
                         v.setBackgroundResource(R.drawable.play);
@@ -82,13 +116,19 @@ class MusicListAdapter extends SimpleCursorAdapter {
                         v.setBackgroundResource(R.drawable.pause);
                     }
                 } else {
+
+
+                    if (btn != null)
+                        btn.setBackgroundResource(R.drawable.play);
+
                     service.setDataSourceL(path);
                     service.startL();
-
-                    if (playedView != null)
-                        playedView.setBackgroundResource(R.drawable.play);
                     v.setBackgroundResource(R.drawable.pause);
 
+                    nowpos = pos;
+                    if (MusicListAdapter.this.mCallBack != null) {
+                        MusicListAdapter.this.mCallBack.scroll();
+                    }
                     playedView = (ImageButton) v;
                 }
 
