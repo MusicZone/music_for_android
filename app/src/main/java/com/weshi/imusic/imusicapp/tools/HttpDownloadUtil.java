@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -73,9 +74,20 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         {
 
             publishProgress(current);
-            downFile(file.get("url"), "imusic/", file.get("name"), Long.valueOf(file.get("size")).longValue());
+            for(int i=1;i<=10;i++) {
+                String urlstr = "url"+String.valueOf(i);
+                String sizestr = "size"+String.valueOf(i);
+                String url = file.get(urlstr);
+                if(TextUtils.isEmpty(url) || url.equals("null")){
+                    break;
+                }
+                int re = downFile(url, "imusic/", file.get("name"), Long.valueOf(file.get(sizestr)).longValue());
+                if(re == 1){
+                    break;
+                }
+            }
             current+=step;
-            Log.d(TAG,file.get("name"));
+            Log.d(TAG, file.get("name"));
         }
 
         return null;
@@ -119,13 +131,14 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             inputStream=getInputStreamFormUrl(urlstr);
             File resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
             if(resultFile==null){
-                return -1;
+                return 0;
             }
             Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath(path, fileName))));
             mContext.sendBroadcast(scanIntent);
+            return 1;
         }
-        return 0;
+
     }
 
     /**

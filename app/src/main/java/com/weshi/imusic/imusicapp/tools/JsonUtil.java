@@ -63,8 +63,12 @@ public class JsonUtil {
                 JSONObject jb = jsonObjs.getJSONObject(i);
                 HashMap<String, String> song = new HashMap<String, String>();
                 song.put("name", jb.getString("name"));
-                song.put("url", jb.getString("url"));
-                song.put("size", jb.getString("size"));
+                for (int j =1 ;j<=10;j++) {
+                    String url = "url"+String.valueOf(j);
+                    String size = "size"+String.valueOf(j);
+                    song.put(url, jb.getString(url));
+                    song.put(size, jb.getString(size));
+                }
                 re[i]=song;
             }
 
