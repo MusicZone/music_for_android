@@ -31,11 +31,14 @@ public class FileUtils {
      */
     public File createSDFile(String fileName){
         File file=new File(SDPath+fileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         return file;
     }
 
@@ -78,7 +81,7 @@ public class FileUtils {
         File file=createSDFile(path+fileName);
         OutputStream outStream=null;
         try {
-            outStream=new FileOutputStream(file);
+            outStream=new FileOutputStream(file,true);
             byte[] buffer=new byte[1024];
             int numread=0;
             do{

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,7 +82,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 if(TextUtils.isEmpty(url) || url.equals("null")){
                     break;
                 }
-                int re = downFile(url, "imusic/", file.get("name"), Long.valueOf(file.get(sizestr)).longValue());
+                int re = downFile(url, "imusic/", file.get("name"), Long.valueOf(file.get(sizestr)).longValue(),current,step);
                 if(re == 1){
                     break;
                 }
@@ -117,7 +118,8 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
      * @param fileName
      * @return
      */
-    public int downFile(String urlstr,String path,String fileName,long filesize){
+
+    public int downFile(String urlstr,String path,String fileName,long filesize,int current,int thisstep){
         InputStream inputStream=null;
         FileUtils fileUtils=new FileUtils();
 
@@ -128,15 +130,82 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             return 1;
         }else{
             if(FileUtils.getSpace()<filesize) return -1;
-            inputStream=getInputStreamFormUrl(urlstr);
-            File resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
-            if(resultFile==null){
+
+
+
+
+            long start = 0;
+            long block = 0;
+            HashMap<String,Long> map = new HashMap<String, Long>();
+            int re = getFileSize(urlstr,map);
+            long fz = 0;
+            if(re == 0){
+                fz = map.get("filesize");
+                block = fz;
+            }else if(re == 1){
+                fz = map.get("size");
+                block = 524288;
+            }else
+                return 0;
+
+
+//================
+            File resultFile = new File(path+fileName);
+            long from=0,to=0;
+            int trytime = 100;
+            int step=0,count=1;
+            if (fz/block!=0) {
+                step = (int)(fz/block)+1;
+            }else{
+                step = (int)(fz/block);
+            }
+            to = from + block-1;
+            while (from+block<=fz && trytime != 0) {
+                inputStream=getInputStreamFormUrl(urlstr,from,to);
+
+                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
+                if(resultFile==null){
+                    trytime--;
+                }else{
+                    from +=block;
+                    to +=block;
+                    int progressive =  current +  (thisstep*count)/step;
+                    publishProgress(progressive);
+                    count++;
+                }
+                long tt = resultFile.length();
+
+                tt=0;
+
+
+
+            }
+            while(from<fz && trytime != 0){
+                inputStream=getInputStreamFormUrl(urlstr,from,fz-1);
+
+                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
+                if(resultFile==null){
+                    trytime--;
+                }else{
+
+                    from +=block;
+                    to +=block;
+                    int progressive =  current +  thisstep;
+                    publishProgress(progressive);
+                }
+
+            }
+
+            if(resultFile.length()==fz && trytime !=0 ) {
+
+                Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath(path, fileName))));
+                mContext.sendBroadcast(scanIntent);
+                return 1;
+            }else{
+                resultFile.delete();
                 return 0;
             }
-            Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath(path, fileName))));
-            mContext.sendBroadcast(scanIntent);
-            return 1;
         }
 
     }
@@ -146,11 +215,12 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
      * @param urlstr
      * @return
      */
-    public InputStream getInputStreamFormUrl(String urlstr){
+    public InputStream getInputStreamFormUrl(String urlstr,long start,long end){
         InputStream inputStream=null;
         try {
             URL url=new URL(urlstr);
             HttpURLConnection urlConn=(HttpURLConnection) url.openConnection();
+            urlConn.setRequestProperty("Range","bytes="+start+"-"+end);
             inputStream=urlConn.getInputStream();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -158,5 +228,35 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             e.printStackTrace();
         }
         return inputStream;
+    }
+    public int getFileSize(String urlstr, HashMap<String,Long> result){
+
+        try {
+            URL url=new URL(urlstr);
+            HttpURLConnection urlConn=(HttpURLConnection) url.openConnection();
+            urlConn.setRequestMethod("HEAD");
+            urlConn.connect();
+            if(urlConn.getResponseCode()==200 || urlConn.getResponseCode()==206){
+                long fs = urlConn.getContentLength();
+                if(fs <=0) return -1;
+                else if(!urlConn.getHeaderField("Accept-Ranges").equals("bytes")){
+                    result.put("size",fs);
+                    return 0;
+                }else {
+                    result.put("size",fs);
+                    return 1;
+                }
+            }else{
+                return -1;
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return -1;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
     }
 }
