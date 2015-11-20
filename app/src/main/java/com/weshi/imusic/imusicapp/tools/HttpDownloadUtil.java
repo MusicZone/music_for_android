@@ -1,6 +1,8 @@
 package com.weshi.imusic.imusicapp.tools;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -19,6 +21,9 @@ import java.net.URL;
 
 
 import java.io.FileOutputStream;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 
 import android.app.Activity;
@@ -32,16 +37,30 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
+
 
 /**
  * Created by apple28 on 15-8-3.
  */
+
+
+
 public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 
     private HashMap<String, String>[] files;
     private CallBack mCallBack;
     private ProgressDialog mProgressDialog;
     private Context mContext;
+    private TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
+        public X509Certificate[] getAcceptedIssuers(){return null;}
+        public void checkClientTrusted(X509Certificate[] certs, String authType){}
+        public void checkServerTrusted(X509Certificate[] certs, String authType){}
+    }};
 
     final String TAG="HttpDownloadUtil";
 
@@ -132,7 +151,16 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             if(FileUtils.getSpace()<filesize) return -1;
 
 
-
+            try {
+                HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+                SSLContext sc = SSLContext.getInstance("TLS");
+                sc.init(null, trustAllCerts, new SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
 
             long start = 0;
             long block = 0;
@@ -222,6 +250,14 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             HttpURLConnection urlConn=(HttpURLConnection) url.openConnection();
             urlConn.setRequestProperty("Range","bytes="+start+"-"+end);
             inputStream=urlConn.getInputStream();
+/*
+
+            MediaPlayer mMediaPlayerI =new MediaPlayer();
+
+            mMediaPlayerI.setDataSource(urlstr);
+            mMediaPlayerI.prepareAsync();// prepare();
+*/
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -232,10 +268,22 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
     public int getFileSize(String urlstr, HashMap<String,Long> result){
 
         try {
+
+
+
             URL url=new URL(urlstr);
             HttpURLConnection urlConn=(HttpURLConnection) url.openConnection();
             urlConn.setRequestMethod("HEAD");
             urlConn.connect();
+
+/*
+            MediaPlayer mMediaPlayerI = new MediaPlayer();
+            mMediaPlayerI.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayerI.setDataSource(urlstr);
+            mMediaPlayerI.prepare();
+*/
+
+            //int tt = urlConn.getResponseCode();
             if(urlConn.getResponseCode()==200 || urlConn.getResponseCode()==206){
                 long fs = urlConn.getContentLength();
                 if(fs <=0) return -1;

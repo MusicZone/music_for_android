@@ -42,13 +42,15 @@ public class JsonUtil {
             for(int i=0;i<count;i++){
                 JSONObject jb = jsonObjs.getJSONObject(i);
                 HashMap<String, String> song = new HashMap<String, String>();
-                song.put("name", jb.getString("name"));
-                song.put("url", jb.getString("url"));
+                song.put("name", AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+",jb.getString("name")));
+                song.put("url", AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString("url")));
                 re[i]=song;
             }
 
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
         return re;
@@ -62,18 +64,20 @@ public class JsonUtil {
             for(int i=0;i<count;i++){
                 JSONObject jb = jsonObjs.getJSONObject(i);
                 HashMap<String, String> song = new HashMap<String, String>();
-                song.put("name", jb.getString("name"));
+                song.put("name", AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString("name")));
                 for (int j =1 ;j<=10;j++) {
                     String url = "url"+String.valueOf(j);
                     String size = "size"+String.valueOf(j);
-                    song.put(url, jb.getString(url));
-                    song.put(size, jb.getString(size));
+                    song.put(url, AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString(url)));
+                    song.put(size, AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString(size)));
                 }
                 re[i]=song;
             }
 
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
         return re;

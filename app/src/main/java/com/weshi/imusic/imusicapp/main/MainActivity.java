@@ -39,7 +39,7 @@ public class MainActivity extends TabActivity {
         intent = new Intent(this,ImusicActivity.class);//新建一个Intent用作Tab1显示的内容
         spec = tabHost.newTabSpec("tab1")//新建一个 Tab
                 //.setIndicator("Tab1", res.getDrawable(android.R.drawable.ic_media_play))//设置名称以及图标
-                .setIndicator("iMusic")//设置名称以及图标
+                .setIndicator("iMusic", res.getDrawable(R.drawable.radio))//设置名称以及图标
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
@@ -47,7 +47,7 @@ public class MainActivity extends TabActivity {
         intent = new Intent(this,LocalActivity.class);//第二个Intent用作Tab1显示的内容
         spec = tabHost.newTabSpec("tab2")//新建一个 Tab
                //.setIndicator("Tab2", res.getDrawable(android.R.drawable.ic_menu_edit))//设置名称以及图标
-                .setIndicator("本地音乐")//设置名称以及图标
+                .setIndicator("本地音乐",res.getDrawable(R.drawable.local))//设置名称以及图标
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
@@ -55,7 +55,7 @@ public class MainActivity extends TabActivity {
         intent = new Intent(this,AboutActivity.class);//第二个Intent用作Tab1显示的内容
         spec = tabHost.newTabSpec("tab3")//新建一个 Tab
                 //.setIndicator("Tab2", res.getDrawable(android.R.drawable.ic_menu_edit))//设置名称以及图标
-                .setIndicator("关于")//设置名称以及图标
+                .setIndicator("关于",res.getDrawable(R.drawable.settings))//设置名称以及图标
                 .setContent(intent);//设置显示的intent，这里的参数也可以是R.id.xxx
         tabHost.addTab(spec);//添加进tabHost
 
@@ -102,12 +102,12 @@ public class MainActivity extends TabActivity {
 
     }
     private void setStyle(View v){
-        final TextView tv = (TextView)v.findViewById(android.R.id.title);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)tv.getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,0);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        params.height=LinearLayout.LayoutParams.WRAP_CONTENT;
-        v.getLayoutParams().height=100;//LinearLayout.LayoutParams.WRAP_CONTENT;
+        //final TextView tv = (TextView)v.findViewById(android.R.id.title);
+        //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)tv.getLayoutParams();
+        //params.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
+        //params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+        //params.height=LinearLayout.LayoutParams.WRAP_CONTENT;
+        //v.getLayoutParams().height=100;//LinearLayout.LayoutParams.WRAP_CONTENT;
         //v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 }

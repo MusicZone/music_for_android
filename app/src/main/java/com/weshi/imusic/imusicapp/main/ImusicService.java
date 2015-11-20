@@ -1,12 +1,26 @@
 package com.weshi.imusic.imusicapp.main;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+
+import com.weshi.imusic.imusicapp.tools.NullHostNameVerifier;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class ImusicService extends Service {
     private final IBinder mBinder = new LocalBinder();
@@ -19,6 +33,14 @@ public class ImusicService extends Service {
     public static final String PLAYER_PREPARE_END_L = "com.weshi.imusic.lprepared";
     public static final String PLAY_COMPLETED_L = "com.weshi.imusic.lplaycompleted";
     public static final String PLAY_ERROR_I = "com.weshi.imusic.ierror";
+/*
+    private TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
+        public X509Certificate[] getAcceptedIssuers(){return null;}
+        public void checkClientTrusted(X509Certificate[] certs, String authType){}
+        public void checkServerTrusted(X509Certificate[] certs, String authType){}
+    }};*/
+
+
     MediaPlayer.OnCompletionListener mCompleteListenerI = new MediaPlayer.OnCompletionListener() {
         public void onCompletion(MediaPlayer mp) {
             broadcastEvent(PLAY_COMPLETED_I);
@@ -85,16 +107,38 @@ public class ImusicService extends Service {
     }
 
     public void setDataSourceI(String path) {
-
         try {
+
+
+
+
             mMediaPlayerI.reset();
+/*            HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());*/
+/*
+            URL url=new URL(path);
+            HttpURLConnection urlConn=(HttpURLConnection) url.openConnection();
+            //urlConn.setRequestMethod("HEAD");
+            urlConn.connect();
+
+*/
+
+            //mMediaPlayerI.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayerI.setDataSource(path);
             mMediaPlayerI.prepare();
+            //mMediaPlayerI.prepareAsync();
         } catch (IOException e) {
+            e.printStackTrace();
             return;
         } catch (IllegalArgumentException e) {
             return;
-        }
+        }/*catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }*/
     }
     public void setDataSourceL(String path) {
 

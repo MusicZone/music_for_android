@@ -43,7 +43,9 @@
         android:text="@string/bbs_Url"
         android:id="@+id/bbs"
         android:layout_below="@+id/version"
-        android:layout_centerHorizontal="true"
         android:textSize="20dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

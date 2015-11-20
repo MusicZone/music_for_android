@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -139,7 +140,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         }else{
                             headPlay = true;
                             Log.d(TAG, "File do not exist!");
-
+/*
                             mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
                                 public void onClick(View v) {
                                     // Perform action on click
@@ -153,11 +154,32 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                                     HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
                                     downloadMusic.execute();
                                 }
-                            });
+                            });*/
                             mPlayPauseButton.setBackgroundResource(R.drawable.play);
                             mPlayPauseButton.setVisibility(View.VISIBLE);
                             setTabClickable(true);
-                            Toast.makeText(ImusicActivity.this,"请连接网络后重试!",Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
+                            progressDialog = new ProgressDialog(ImusicActivity.this);
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                            progressDialog.setTitle("正在同步歌曲...");
+                            progressDialog.setProgress(0);
+                            progressDialog.setMax(100);
+                            progressDialog.show();
+
+                            HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
+                            downloadMusic.execute();
+
+
+
+
+
+
+                            //Toast.makeText(ImusicActivity.this,"请连接网络后重试!",Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         headPlay = false;
@@ -237,9 +259,6 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
         mProgressBar = (ProgressBar) findViewById(R.id.waiting);
         mPlayPauseButton = (ImageButton) findViewById(R.id.imusicplay);
         mTextView = (TextView) findViewById(R.id.title);
-
-
-
 
     }
 

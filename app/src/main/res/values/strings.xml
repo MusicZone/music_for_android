@@ -13,8 +13,8 @@
     <string name="soft_update_later">Later</string>
     <string name="soft_updating">Updating...</string>
     <string name="soft_update_cancel">Cancel</string>
-    <string name="Server_Url">http://101.200.73.166/app/?</string>
-    <string name="Server_Urlbak">http://www.imusic.ren/app/?</string>
+    <string name="Server_Urlbak">http://101.200.73.166/app/?</string>
+    <string name="Server_Url">http://www.imusic.ren/app/?</string>
     <string name="bbs_Url">http://www.imusic.ren/bbs</string>
 
 
