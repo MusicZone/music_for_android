@@ -99,7 +99,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 String sizestr = "size"+String.valueOf(i);
                 String url = file.get(urlstr);
                 if(TextUtils.isEmpty(url) || url.equals("null")){
-                    break;
+                    continue;
                 }
                 int re = downFile(url, "imusic/", file.get("name"), Long.valueOf(file.get(sizestr)).longValue(),current,step);
                 if(re == 1){
