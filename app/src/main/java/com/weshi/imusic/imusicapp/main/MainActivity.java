@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.weshi.imusic.imusicapp.R;
+import com.weshi.imusic.imusicapp.indicator.SampleCirclesDefault;
 import com.weshi.imusic.imusicapp.update.UpdateManager;
 
 public class MainActivity extends TabActivity {
@@ -23,6 +25,16 @@ public class MainActivity extends TabActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences pre = getSharedPreferences("first_pref",MODE_PRIVATE);
+        Boolean isFirstTime = pre.getBoolean("isFirstTime",true);
+        if(isFirstTime){
+            Intent it = new Intent(MainActivity.this, SampleCirclesDefault.class);
+            startActivity(it);
+            finish();
+            return;
+        }
+
+
         setContentView(R.layout.activity_main);//这里使用了上面创建的xml文件（Tab页面的布局）
 
 

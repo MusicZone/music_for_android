@@ -42,7 +42,13 @@
             android:label="@string/title_activity_about" android:launchMode="singleTask">
         </activity>
 
-
+        <activity
+            android:name=".indicator.SampleCirclesDefault"
+            android:label="Circles/Default">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
