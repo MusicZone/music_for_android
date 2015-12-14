@@ -42,6 +42,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -201,9 +203,9 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                     publishProgress(progressive);
                     count++;
                 }
-                long tt = resultFile.length();
+                //long tt = resultFile.length();
 
-                tt=0;
+                //tt=0;
 
 
 
@@ -216,8 +218,8 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                     trytime--;
                 }else{
 
-                    from +=block;
-                    to +=block;
+                    from =fz;
+                    to =fz;
                     int progressive =  current +  thisstep;
                     publishProgress(progressive);
                 }
@@ -286,6 +288,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             //int tt = urlConn.getResponseCode();
             if(urlConn.getResponseCode()==200 || urlConn.getResponseCode()==206){
                 long fs = urlConn.getContentLength();
+                Map<String, List<String>> tt = urlConn.getHeaderFields();
                 if(fs <=0) return -1;
                 else if(!urlConn.getHeaderField("Accept-Ranges").equals("bytes")){
                     result.put("size",fs);
