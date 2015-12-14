@@ -74,20 +74,23 @@ public class FileUtils {
      * @param inputStream
      * @return
      */
-    public File writeToSDfromInput(String path,String fileName,InputStream inputStream){
+    public File writeToSDfromInput(String path,String fileName,InputStream inputStream,long size){
         //createSDDir(path);
         if(inputStream == null)
             return null;
         File file=createSDFile(path+fileName);
         OutputStream outStream=null;
+        long readsz = 0;
         try {
             outStream=new FileOutputStream(file,true);
             byte[] buffer=new byte[1024];
             int numread=0;
             do{
                 numread = inputStream.read(buffer);
-                if(numread != -1)
-                    outStream.write(buffer,0,numread);
+                if(numread != -1) {
+                    readsz += numread;
+                    outStream.write(buffer, 0, numread);
+                }
                 else break;
             }while(true);
             /*
@@ -108,7 +111,10 @@ public class FileUtils {
                 e.printStackTrace();
             }
         }
-        return file;
+        if(readsz == size)
+            return file;
+        else
+            return null;
 
 
     }

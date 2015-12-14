@@ -164,7 +164,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
 
 
-                            progressDialog = new ProgressDialog(ImusicActivity.this);
+                            progressDialog = new ProgressDialog(getParent());
                             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                             progressDialog.setTitle("正在同步歌曲...");
                             progressDialog.setProgress(0);

@@ -182,7 +182,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 //================
             File resultFile = new File(path+fileName);
             long from=0,to=0;
-            int trytime = 100;
+            int trytime = 1000;
             int step=0,count=1;
             if (fz/block!=0) {
                 step = (int)(fz/block)+1;
@@ -193,7 +193,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             while (from+block<=fz && trytime != 0) {
                 inputStream=getInputStreamFormUrl(urlstr,from,to);
 
-                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
+                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream,block);
                 if(resultFile==null){
                     trytime--;
                 }else{
@@ -213,7 +213,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             while(from<fz && trytime != 0){
                 inputStream=getInputStreamFormUrl(urlstr,from,fz-1);
 
-                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream);
+                resultFile=fileUtils.writeToSDfromInput(path, fileName, inputStream,fz - from);
                 if(resultFile==null){
                     trytime--;
                 }else{
