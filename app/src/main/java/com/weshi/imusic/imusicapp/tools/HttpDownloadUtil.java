@@ -166,23 +166,31 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 
             long start = 0;
             long block = 0;
-            HashMap<String,Long> map = new HashMap<String, Long>();
-            int re = getFileSize(urlstr,map);
+            int trytime = 1000;
             long fz = 0;
-            if(re == 0){
-                fz = map.get("filesize");
-                block = fz;
-            }else if(re == 1){
-                fz = map.get("size");
-                block = 524288;
-            }else
+
+            HashMap<String,Long> map = new HashMap<String, Long>();
+            while(trytime>0) {
+                int re = getFileSize(urlstr, map);
+
+                if (re == 0) {
+                    fz = map.get("filesize");
+                    block = fz;
+                    break;
+                } else if (re == 1) {
+                    fz = map.get("size");
+                    block = 524288;
+                    break;
+                } else
+                    trytime--;
+
+            }
+            if(trytime<=0)
                 return 0;
-
-
 //================
             File resultFile = new File(path+fileName);
             long from=0,to=0;
-            int trytime = 1000;
+
             int step=0,count=1;
             if (fz/block!=0) {
                 step = (int)(fz/block)+1;
