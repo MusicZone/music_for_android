@@ -68,8 +68,10 @@ public class JsonUtil {
                 for (int j =1 ;j<=10;j++) {
                     String url = "url"+String.valueOf(j);
                     String size = "size"+String.valueOf(j);
+                    String md = "md"+String.valueOf(j);
                     song.put(url, AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString(url)));
                     song.put(size, AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString(size)));
+                    song.put(md, AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString(md)));
                 }
                 re[i]=song;
             }

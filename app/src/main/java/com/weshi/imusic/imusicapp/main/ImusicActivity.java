@@ -7,6 +7,7 @@ import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -68,6 +70,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
     private int SongID = 0;
     private boolean headPlay=false;
+    private HttpDownloadUtil downloadMusic;
 
 
 
@@ -238,6 +241,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
         tb.getChildAt(1).setClickable(en);
         tb.getChildAt(2).setClickable(en);//.getTabWidget().setEnabled(en); //.getChildAt(1).setClickable(en);
     }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imusic);
@@ -289,6 +293,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
     public void notifyResult(boolean re)
     {
         if(re){
+            downloadMusic = null;
             mTextView.setText("");
             //Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             //scanIntent.setData(Uri.fromFile(new File(FileUtils.getFilePath("imusic/", ""))));
@@ -415,9 +420,17 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                             progressDialog.setTitle("正在同步歌曲...");
                             progressDialog.setProgress(0);
                             progressDialog.setMax(100);
+                            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    if(downloadMusic != null){
+                                        downloadMusic.cancel(true);
+                                    }
+                                }
+                            });
                             progressDialog.show();
 
-                            HttpDownloadUtil downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
+                            downloadMusic = new HttpDownloadUtil(ImusicActivity.this, playAlbums, ImusicActivity.this, progressDialog);
                             downloadMusic.execute();
                         }
                     });
