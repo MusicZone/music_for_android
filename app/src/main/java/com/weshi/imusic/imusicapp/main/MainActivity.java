@@ -38,9 +38,9 @@ public class MainActivity extends TabActivity {
         setContentView(R.layout.activity_main);//这里使用了上面创建的xml文件（Tab页面的布局）
 
 
-        //UpdateManager manager = new UpdateManager(this);
+        UpdateManager manager = new UpdateManager(this);
         // 检查软件更新
-        //manager.checkUpdate();
+        manager.checkUpdate();
 
         Resources res = getResources(); // Resource object to get Drawables
         TabHost tabHost = getTabHost();  // The activity TabHost

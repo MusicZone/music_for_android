@@ -65,7 +65,7 @@ public class UpdateManager {
                     installApk();
                     break;
                 case CANNOT_UPDATE:
-                    Toast.makeText(mContext, R.string.soft_update_no, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(mContext, R.string.soft_update_no, Toast.LENGTH_LONG).show();
                     break;
                 case NEED_UPDATE:
                     showNoticeDialog();

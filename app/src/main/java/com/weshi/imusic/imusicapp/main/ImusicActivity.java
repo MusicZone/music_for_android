@@ -345,8 +345,10 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     strResult = EntityUtils.toString(httpResponse.getEntity());
                 }
                 playHeads = jsonparser.parserAbstract(strResult);
-                //dataStr = jsonparser.parserDate(strResult);
-                mHandler.obtainMessage(QUERY_ABSTRACT_SUCCESS).sendToTarget();
+                if(playHeads == null)
+                    mHandler.obtainMessage(QUERY_ABSTRACT_FAILURE).sendToTarget();
+                else
+                    mHandler.obtainMessage(QUERY_ABSTRACT_SUCCESS).sendToTarget();
             } catch (Exception e) {
                 mHandler.obtainMessage(QUERY_ABSTRACT_FAILURE).sendToTarget();
                 return;
@@ -370,7 +372,10 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                 }
 
                 playAlbums = jsonparser.parserAlbums(strResult);
-                mHandler.obtainMessage(QUERY_ALBUMS_SUCCESS).sendToTarget();
+                if(playAlbums == null)
+                    mHandler.obtainMessage(QUERY_ALBUMS_FAILURE).sendToTarget();
+                else
+                    mHandler.obtainMessage(QUERY_ALBUMS_SUCCESS).sendToTarget();
             } catch (Exception e) {
                 mHandler.obtainMessage(QUERY_ALBUMS_FAILURE).sendToTarget();
                 return;
