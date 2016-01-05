@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 
 public class FileUtils {
     private static String SDPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
@@ -127,6 +128,8 @@ public class FileUtils {
         //File file=createSDFile(path+fileName);
         //OutputStream outStream=null;
         long readsz = 0;
+        Log.d("mydownload", "writestart:" + String.valueOf(start));
+
         try {
             //outStream=new FileOutputStream(file,true);
             //byte[] buffer=new byte[(int)size];
@@ -143,20 +146,26 @@ public class FileUtils {
                 baos.write(bytes,0,numRead);
             }
 
-            byte[] buffer = baos.toByteArray();
-            int num = buffer.length;
+            bytes = null;
+            byte[] buff = baos.toByteArray();
+            int num = buff.length;
 
 
-            if(num == size) {
+            if(num == size  && dst != null) {
                     //readsz += numread;
                     //outStream.write(buffer, 0, numread);
-                    System.arraycopy(buffer,0,dst,(int)start,(int)size);
+                    System.arraycopy(buff, 0, dst, (int) start, (int) size);
                     inputStream.close();
+                buff = null;
+                Log.d("mydownload", "writeend:sucess");
                     return 0;
             }
             else{
                     inputStream.close();
-                    return -1;
+                Log.d("mydownload", "writeend:failed");
+
+                buff = null;
+                return -1;
             }
                 //else break;
             //}while(true);
@@ -177,6 +186,7 @@ public class FileUtils {
                 ee.printStackTrace();
                 return -1;
             }
+            Log.d("mydownload", "writeend:failed with exception:"+e.getMessage());
             return -1;
         }/*
         if(readsz == size)

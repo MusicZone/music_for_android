@@ -65,6 +65,7 @@ public class JsonUtil {
                 JSONObject jb = jsonObjs.getJSONObject(i);
                 HashMap<String, String> song = new HashMap<String, String>();
                 song.put("name", AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString("name")));
+                song.put("urls_count", AesWithBase64.decrypt("+imusic2015weshiimusic2015weshi+", jb.getString("urls_count")));
                 for (int j =1 ;j<=10;j++) {
                     String url = "url"+String.valueOf(j);
                     String size = "size"+String.valueOf(j);
