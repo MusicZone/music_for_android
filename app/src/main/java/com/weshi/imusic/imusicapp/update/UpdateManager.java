@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.util.HashMap;
 
 import android.app.AlertDialog;
@@ -21,6 +22,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -169,6 +171,17 @@ public class UpdateManager {
         builder.setTitle(R.string.soft_update_title);
         builder.setMessage(R.string.soft_update_info);
         // 更新
+        builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                if(keyCode == KeyEvent.KEYCODE_BACK){
+                    System.exit(0);
+                }
+
+                return false;
+            }
+        });
         builder.setPositiveButton(R.string.soft_update_updatebtn, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -178,12 +191,12 @@ public class UpdateManager {
             }
         });
         // 稍后更新
-        builder.setNegativeButton(R.string.soft_update_later, new OnClickListener() {
+        /*builder.setNegativeButton(R.string.soft_update_later, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        });
+        });*/
         Dialog noticeDialog = builder.create();
         noticeDialog.show();
     }
