@@ -152,13 +152,13 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 String url = file.get(urlstr);
                 String md5 = file.get(md5str);
                 String size = file.get(sizestr);
-                if(TextUtils.isEmpty(url) || url.equals("null")){
+                if(TextUtils.isEmpty(url) || url.equals("")){
                     continue;
                 }
-                if(TextUtils.isEmpty(md5) || md5.equals("null")){
+                if(TextUtils.isEmpty(md5) || md5.equals("") || md5.equals("0")){
                     continue;
                 }
-                if(TextUtils.isEmpty(size) || size.equals("0")){
+                if(TextUtils.isEmpty(size) || size.equals("") || size.equals("0")){
                     continue;
                 }
 
@@ -279,7 +279,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                                     while(checktime>0) {
                                         while (md5It.hasNext()) {
                                             Map.Entry<String, ArrayList<String[]>> entry = (Map.Entry<String, ArrayList<String[]>>) md5It.next();
-                                            md5 = entry.getKey();
+                                            String md5_tmp = entry.getKey();
                                             ArrayList<String[]> info = entry.getValue();
                                             urlIt = info.iterator();
 
@@ -289,36 +289,47 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                                                 long filesize = Long.valueOf(urlinfo[0]);
 
 
-                                                if (filesize == 0 || FileUtils.getSpace() < filesize) continue;
+                                                if(md5 == md5_tmp){
+                                                    if(filesize != 0 && FileUtils.getSpace()>filesize) {
+                                                        pool.execute(new MyTask(urlstr, from, block, myidx,md));
+                                                        return;
+                                                    }
+                                                }else {
+                                                    md5 = md5_tmp;
 
-                                                String[] urlstrs = new String[5];
-                                                urlstrs[0] = urlstr;
-                                                if(urlIt.hasNext()){
-                                                    urlstrs[1]= urlIt.next()[1];
-                                                }else{
-                                                    urlstrs[1]= urlstr;
+
+                                                    if (filesize == 0 || FileUtils.getSpace() < filesize)
+                                                        continue;
+
+                                                    String[] urlstrs = new String[5];
+                                                    urlstrs[0] = urlstr;
+                                                    if (urlIt.hasNext()) {
+                                                        urlstrs[1] = urlIt.next()[1];
+                                                    } else {
+                                                        urlstrs[1] = urlstr;
+                                                    }
+
+                                                    if (urlIt.hasNext()) {
+                                                        urlstrs[2] = urlIt.next()[1];
+                                                    } else {
+                                                        urlstrs[2] = urlstr;
+                                                    }
+
+                                                    if (urlIt.hasNext()) {
+                                                        urlstrs[3] = urlIt.next()[1];
+                                                    } else {
+                                                        urlstrs[3] = urlstr;
+
                                                 }
+                                                    if (urlIt.hasNext()) {
+                                                        urlstrs[4] = urlIt.next()[1];
+                                                    } else {
+                                                        urlstrs[4] = urlstr;
+                                                    }
 
-                                                if(urlIt.hasNext()){
-                                                    urlstrs[2]= urlIt.next()[1];
-                                                }else{
-                                                    urlstrs[2]= urlstr;
-                                                }
-
-                                                if(urlIt.hasNext()){
-                                                    urlstrs[3]= urlIt.next()[1];
-                                                }else{
-                                                    urlstrs[3]= urlstr;
-                                                }
-
-                                                if(urlIt.hasNext()){
-                                                    urlstrs[4]= urlIt.next()[1];
-                                                }else{
-                                                    urlstrs[4]= urlstr;
-                                                }
-
-                                                if (downloadByUrl(urlstrs, md) == 1) {
-                                                    return;
+                                                    if (downloadByUrl(urlstrs, md) == 1) {
+                                                        return;
+                                                    }
                                                 }
                                             }
                                         }
@@ -670,7 +681,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 return -1;
             }
 
-            int re = getFileSize(urlstr[0], map);
+            int re = getFileSize(urlstr[3-trys], map);
 
             if (re == 0) {
                 fz = map.get("size");
@@ -692,7 +703,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         //final String url = urlstr;
 
         int count=1;
-        if (fz/block!=0) {
+        if (fz%block!=0) {
             steps = (int)(fz/block)+1;
         }else{
             steps = (int)(fz/block);
