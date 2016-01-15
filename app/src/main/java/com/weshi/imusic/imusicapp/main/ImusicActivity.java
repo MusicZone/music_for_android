@@ -19,7 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.util.Log;
+//import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -123,7 +123,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                     if(SongID<playAlbums.length) {
                         HashMap<String, String> det = playAlbums[SongID];
                         String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
-                        Log.d(TAG, "After Head, play song:" + aurl + "songid:" + SongID);
+                        //og.d(TAG, "After Head, play song:" + aurl + "songid:" + SongID);
                         mMusicPlayerService.setDataSourceI(aurl);
                         if (FileUtils.isFileExist("imusic/", det.get("name"))) {
                             headPlay = false;
@@ -142,7 +142,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                             mMusicPlayerService.startI();
                         }else{
                             headPlay = true;
-                            Log.d(TAG, "File do not exist!");
+                            //og.d(TAG, "File do not exist!");
 /*
                             mPlayPauseButton.setOnClickListener(new Button.OnClickListener() {
                                 public void onClick(View v) {
@@ -204,7 +204,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         String aurl = det.get("url");
 
 
-                        Log.d(TAG, "After Song, play head:"+aurl);
+                        //og.d(TAG, "After Song, play head:"+aurl);
                         mMusicPlayerService.setDataSourceI(aurl);
                         mMusicPlayerService.startI();
 
@@ -225,7 +225,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
                         HashMap<String, String> det = playAlbums[SongID];
                         String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
-                        Log.d(TAG, "No head, play song:"+aurl);
+                        //og.d(TAG, "No head, play song:"+aurl);
                         mMusicPlayerService.setDataSource(aurl);
                         mMusicPlayerService.start();*/
                     }
@@ -318,7 +318,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
 
 
             //String aurl = FileUtils.getFilePath("imusic/", det.get("name"));
-            //Log.d(TAG, "First time, No head now, play song:" + aurl);
+            //og.d(TAG, "First time, No head now, play song:" + aurl);
             //mMusicPlayerService.setDataSource(aurl);
             //mMusicPlayerService.start();
 
@@ -409,7 +409,7 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
                         headPlay=true;
 
 
-                        Log.d(TAG, "Get list and play first head:" + aurl);
+                        //og.d(TAG, "Get list and play first head:" + aurl);
                         mMusicPlayerService.setDataSourceI(aurl);
 
                     }

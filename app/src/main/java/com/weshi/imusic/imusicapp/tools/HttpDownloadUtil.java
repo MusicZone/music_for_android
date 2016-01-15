@@ -38,7 +38,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
+//import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -176,9 +176,9 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 urls.add(urlinfo);
             }
             addFourTimes(mdmap);
-            //Log.d("download", "s1:"+String.valueOf(i));
+            //og.d("download", "s1:"+String.valueOf(i));
             int re = downFile(mdmap, "imusic/", file.get("name"), current,step);
-            //Log.d("download", "s2:"+String.valueOf(re));
+            //og.d("download", "s2:"+String.valueOf(re));
 
             /*for(int i=1;i<=sum;i++) {
                 if(isCancelled())
@@ -196,15 +196,15 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                     md5 = null;
                 }
 
-                Log.d("download", "s1:"+String.valueOf(i));
+                //og.d("download", "s1:"+String.valueOf(i));
                 int re = downFile(url, "imusic/", file.get("name"),md5, Long.valueOf(file.get(sizestr)).longValue(),current,step);
-                Log.d("download", "s2:"+String.valueOf(re));
+                //og.d("download", "s2:"+String.valueOf(re));
                 if(re == 1){
                     break;
                 }
             }*/
             current+=step;
-            Log.d(TAG, file.get("name"));
+            //og.d(TAG, file.get("name"));
         }
 
         return null;
@@ -251,7 +251,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                             allparts.put(myidx,true);
 
                             int gets = allparts.size();
-                            Log.d("mydownload", "threadcomplete:" + String.valueOf(gets)+"/"+String.valueOf(steps));
+                            //og.d("mydownload", "threadcomplete:" + String.valueOf(gets)+"/"+String.valueOf(steps));
 
                             int progressive =  curr +  (steplengh*gets)/steps;
                             publishProgress(progressive);
@@ -359,7 +359,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
     }
 
     protected void onProgressUpdate(Integer... progress) {
-        //Log.d(LOG_TAG,progress[0]);
+        //og.d(LOG_TAG,progress[0]);
         //mProgressDialog.setProgress(Integer.parseInt(progress[0]));
         mProgressDialog.setProgress(progress[0]);
     }
@@ -386,9 +386,9 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         String md5;
         MyTask(String url,long from,long block,int idx,String md5) { this.url = url;this.from = from; this.block = block; this.idx = idx;this.md5 = md5; }
         public void run() {
-            Log.d("download", "s5:" +url+"-a-"+String.valueOf(from)+"-"+String.valueOf(block)+"-"+String.valueOf(idx));
+            //og.d("download", "s5:" +url+"-a-"+String.valueOf(from)+"-"+String.valueOf(block)+"-"+String.valueOf(idx));
             downloadByThread(url, from, block, idx, md5);
-            Log.d("download", "s6:");
+            //og.d("download", "s6:");
         }
     }
     //public int downFile(String urlstr,String path,String fileName,String md5, long filesize,int current,int thisstep){
@@ -396,7 +396,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         long filesize;
         String urlstr;
         InputStream inputStream=null;
-        //Log.i("download", "sx:");
+        //og.i("download", "sx:");
         fileUtils.createSDDir(path);
         if (FileUtils.isFileExist(path, fileName)){
             int progressive =  current +  thisstep;
@@ -465,11 +465,11 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 
                         if(md5 != null){
 
-                            Log.d("download", "s7:");
+                            //og.d("download", "s7:");
                             //int len = buffer.length;
                             String checksum = fileUtils.md5sum(buffer);
                             if(!checksum.equals(md5)){
-                                Log.d("download", "s8:");
+                                //og.d("download", "s8:");
                                 allparts =null;
                                 buffer = null;
                                 return -1;
@@ -484,7 +484,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                         allparts =null;
                         return 1;
                     }else{
-                        Log.d("download", "s9:");
+                        //og.d("download", "s9:");
                         allparts =null;
                         buffer = null;
                         return 0;
@@ -530,7 +530,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             if(FileUtils.getSpace()<filesize) return -1;
 
 
-            Log.i("download", "s3:");
+            //og.i("download", "s3:");
             curr = current;
             steplengh = thisstep;
             times = 1000;
@@ -575,7 +575,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
             }
             map = null;
 
-            Log.d("download", "s4:"+String.valueOf(trys));
+            //og.d("download", "s4:"+String.valueOf(trys));
             if(trys<=0)
                 return 0;
             final String url = urlstr;
@@ -624,11 +624,11 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
 
                 if(md5 != null){
 
-                    Log.d("download", "s7:");
+                    //og.d("download", "s7:");
                     //int len = buffer.length;
                     String checksum = fileUtils.md5sum(buffer);
                     if(!checksum.equals(md5)){
-                        Log.d("download", "s8:");
+                        //og.d("download", "s8:");
                         allparts =null;
                         buffer = null;
                         return 0;
@@ -643,7 +643,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
                 allparts =null;
                 return 1;
             }else{
-                Log.d("download", "s9:");
+                //og.d("download", "s9:");
                 allparts =null;
                 buffer = null;
                 return 0;
@@ -653,7 +653,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
     }
     public int downloadByUrl(String[] urlstr,String md)
     {
-        //Log.i("download", "s3:");
+        //og.i("download", "s3:");
         //curr = current;
         //steplengh = thisstep;
         times = 100;
@@ -697,7 +697,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         }
         map = null;
 
-        //Log.d("download", "s4:"+String.valueOf(trys));
+        //og.d("download", "s4:"+String.valueOf(trys));
         if(trys<=0)
             return 0;
         //final String url = urlstr;
@@ -785,7 +785,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
      */
     public InputStream getInputStreamFormUrl(String urlstr,long start,long end){
         InputStream inputStream=null;
-        Log.d("mydownload", "threadstart:" + urlstr);
+        //og.d("mydownload", "threadstart:" + urlstr);
 
         try {
             URL url=new URL(urlstr);
@@ -807,7 +807,7 @@ public class HttpDownloadUtil extends AsyncTask<String,Integer,String>  {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("mydownload", "threadend:" + String.valueOf(start) + ((inputStream == null) ? ":failed" : ":sucess"));
+        //og.d("mydownload", "threadend:" + String.valueOf(start) + ((inputStream == null) ? ":failed" : ":sucess"));
 
         return inputStream;
     }

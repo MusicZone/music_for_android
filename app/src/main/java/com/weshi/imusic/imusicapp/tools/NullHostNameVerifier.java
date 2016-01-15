@@ -5,15 +5,15 @@ package com.weshi.imusic.imusicapp.tools;
  */
 
 import javax.net.ssl.HostnameVerifier;
-        import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSession;
 
-        import android.util.Log;
+//import android.util.Log;
 
 public class NullHostNameVerifier implements HostnameVerifier {
 
     @Override
     public boolean verify(String hostname, SSLSession session) {
-        //Log.i("RestUtilImpl", "Approving certificate for " + hostname);
+        //og.i("RestUtilImpl", "Approving certificate for " + hostname);
         return true;
     }
 
