@@ -170,6 +170,7 @@ public class UpdateManager {
         AlertDialog.Builder builder = new Builder(mContext);
         builder.setTitle(R.string.soft_update_title);
         builder.setMessage(R.string.soft_update_info);
+        builder.setCancelable(false);
         // 更新
         builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override

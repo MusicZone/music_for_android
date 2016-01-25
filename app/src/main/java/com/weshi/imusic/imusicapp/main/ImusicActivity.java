@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -335,7 +336,12 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
         @Override
         public void run() {
             try {
-                String url=getText(R.string.Server_Url)+"m=Abstracts&a=get";
+                int versionCode = 0;
+                // 获取软件版本号，对应AndroidManifest.xml下android:versionCode
+                versionCode = ImusicActivity.this.getPackageManager().getPackageInfo("com.weshi.imusic.imusicapp", 0).versionCode;
+
+                //String url=getText(R.string.Server_Url)+"m=Abstracts&a=get";
+                String url=getText(R.string.Server_Url)+"m=Abstracts&a=get&sys=android&ver="+String.valueOf(versionCode);
                 HttpGet httpRequest = new HttpGet(url);
                 String strResult = "";
                 HttpClient httpClient = new DefaultHttpClient();
@@ -361,7 +367,12 @@ public class ImusicActivity extends Activity implements HttpDownloadUtil.CallBac
         public void run() {
             // TODO Auto-generated method stub
             try {
-                String url=getText(R.string.Server_Url)+"m=Albums&a=get";
+                int versionCode = 0;
+                // 获取软件版本号，对应AndroidManifest.xml下android:versionCode
+                versionCode = ImusicActivity.this.getPackageManager().getPackageInfo("com.weshi.imusic.imusicapp", 0).versionCode;
+
+                //String url=getText(R.string.Server_Url)+"m=Albums&a=get";
+                String url=getText(R.string.Server_Url)+"m=Albums&a=get&sys=android&ver="+String.valueOf(versionCode);
                 HttpGet httpRequest = new HttpGet(url);
                 String strResult = "";
                 HttpClient httpClient = new DefaultHttpClient();

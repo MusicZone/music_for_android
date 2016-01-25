@@ -2,18 +2,25 @@
 <items version="2" >
 
     <item
-        jar="/Users/apple28/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.0.0/support-v4-19.0.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="afee690af14bd2c32d400cdf78e746fd45c386fa">
-        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/pre-dexed/debug/support-v4-19.0.0-86203853583e9168c930c080d7b2233527366242.jar" />
-    </item>
-    <item
         jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
         <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-7155aab1f5327d54a15827ad45b1584471b39d8e.jar" />
+    </item>
+    <item
+        jar="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/exploded-aar/imusic/library/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="df91d3924f3eaabd7916bda31f04c05447aa80b4">
+        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/pre-dexed/debug/classes-1ab928085a23b3ba39c3a917c0764cbba86e042b.jar" />
+    </item>
+    <item
+        jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
+        <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/classes-8f897e334cff23db7c5cd1796791311aaba76108.jar" />
     </item>
     <item
         jar="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.0.0/jars/classes.jar"
@@ -30,25 +37,18 @@
         <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-c303afd515d041822f3137b148520016ce4115ae.jar" />
     </item>
     <item
-        jar="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/exploded-aar/imusic/library/unspecified/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="25cff8514ece006cc3874cf7c82191a1165dc23f">
-        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/pre-dexed/debug/classes-1ab928085a23b3ba39c3a917c0764cbba86e042b.jar" />
-    </item>
-    <item
-        jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/classes-8f897e334cff23db7c5cd1796791311aaba76108.jar" />
-    </item>
-    <item
         jar="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="f8efd0096475e0daf054267b61544e10dc776503">
         <dex dex="/Users/apple28/Desktop/imusic/android/imusicApp/app/build/intermediates/pre-dexed/debug/classes-06e712eddf17c8fce9216d6a9cc243bd4cfed2bd.jar" />
+    </item>
+    <item
+        jar="/Users/apple28/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.0.0/support-v4-19.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="afee690af14bd2c32d400cdf78e746fd45c386fa">
+        <dex dex="/Users/apple28/Desktop/imusic/github/music_for_android/imusic/app/build/intermediates/pre-dexed/debug/support-v4-19.0.0-86203853583e9168c930c080d7b2233527366242.jar" />
     </item>
 
 </items>
